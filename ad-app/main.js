@@ -5,6 +5,9 @@ const AD_PERIOD = 1000 * 60 * 1; // 1 minutes period
 const TYPE_BANNER = "banner";
 const TYPE_L_BANNER = "l-banner";
 
+const DUMMY_PICTURES = ["momi_original", "momi_red", "momi_green"]
+var current_interactive_img = null;
+
 // scene implementation
 var scene = {
     theAppObject:null,
@@ -40,6 +43,12 @@ function handleKeyCode(kc) {
             case VK_RED:
                 // red button only prints to the console for now
                 console.log("Red");
+                let new_index = current_interactive_img + 1;
+                if (new_index === DUMMY_PICTURES.length) 
+                    new_index = 0;
+                document.getElementById(DUMMY_PICTURES[new_index]).style.display = "block";
+                document.getElementById(DUMMY_PICTURES[current_interactive_img]).style.display = "none";
+                current_interactive_img = new_index;
                 break;
             case VK_GREEN:
                 // green button only prints to the console for now
@@ -131,6 +140,9 @@ function display_banner(ad_data) {
     let banner_div = document.getElementById("banner-div");
     banner_div.style.display = "block";
     current_ad = TYPE_BANNER;
+
+    current_interactive_img = 0;
+
     console.log("Banner displayed");
 }
 

@@ -4,6 +4,9 @@ var xmlWriter = require('xml-writer');
 ads = [1, 2, 3, 4, 5]
 
 const server = http.createServer((request, response) => {
+  response.setHeader('Access-Control-Allow-Origin', '*')
+  response.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+   response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   if (request.method === "GET" && request.url.startsWith("/vast")) {
     console.log("VAST request received")
 

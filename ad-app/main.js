@@ -110,9 +110,17 @@ function start() {
 }
 
 function requestAd() {
-    // ToDo: make VAST Request
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "http://127.0.0.1:8080/vast.xml");
+    xhr.setRequestHeader("Accept", "application/xml");
+    xhr.onload = () => {
+        xmlDoc = xhr.responseXML;   // a document object containing the XML
+        console.log(xmlDoc.getElementsByTagName("Ad")[0]);
+        // getElementsByTagName("MediaFile")[0].getAttribute("type")    --> returns the attribute of the specified tag
+        // xmlDoc.getElementsByTagName("MediaFile")[0].textContent      --> returns the text of the specified tag
+    }
+    xhr.send();
 
-    // ToDo: call async function for waiting for the Response 
     // dummy ad data
     let ad_data = {
         type_ad: TYPE_BANNER,

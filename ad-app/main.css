@@ -16,7 +16,6 @@ body
     width: 1280px; 
     height: 720px; 
     outline: transparent;
-    z-index: 5;
 }
 
 /** application/oipfApplicationManager embedded object style  */
@@ -32,53 +31,6 @@ object#applicationManager
 /** safe area as recommended by standard */
 div.safe_area 
 {
-    position: fixed;
-}
-
-/* set text style */
-div.center {
-  padding: 270px 0;
-}
-
-#banner-div{
-    background-color: rgb(0, 21, 73);
     position: absolute;
-    left: 128px; 
-    top: 500px; 
-    width: 1024px; 
-    height: 200px;
-    display: none;
-    z-index: 10;
-    margin: 0px;
-}
-
-#l-banner-div {
-    background-color: rgb(0, 21, 73);
-    position: fixed;
-    width: 1280px;
-    height: 720px;
-    display: none;
-    z-index: 1;
-}
-
-#l-banner-img {
-    position: fixed;
-    float: left;
-}
-
-#l-banner-p
-{
-    position: fixed;
-    float: left;
-    font-family: sans-serif;
-    font-size: 42px;
-    text-align: center;
-    height: 1280px;
-    width: 800px;
-    position: relative; 
-    top: 550px; 
-    left: 300px; 
-    font-size: 36px; 
-    color: white;
 }
 

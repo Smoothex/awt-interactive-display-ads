@@ -1,95 +1,92 @@
 //
 // This file holds the main functionality of the HbbTV app
 //
-const AD_PERIOD = 1000 * 60 * 1; // 1 minutes period 
-const TYPE_BANNER = "banner";
-const TYPE_L_BANNER = "l-banner";
+const AD_PERIOD = 1000 * 60 * 1; // 1 minute dummy period 
 
-const DUMMY_PICTURES = ["momi_original", "momi_red", "momi_green"]
-var current_interactive_img = null;
-
-// scene implementation
-var scene = {
-    theAppObject:null,
-    appAreaDiv: null,
-    isAdRunning: false,
-    currentAd: null,
-    videoBroadcastDiv: null,
-    initialize: function(appObj) {
-        this.theAppObject = appObj;
-        this.appAreaDiv = document.getElementById('app_area');
-        this.videoBroadcastDiv = document.getElementById('video');
-        // register RC button event listener
-        rcUtils.registerKeyEventListener();
-        // initial state is app_area hidden
-    },
-    resizeVideo: function(ratio) {
-        this.videoBroadcastDiv.style.left = (1280*(1-ratio)).toString() + "px";
-        this.videoBroadcastDiv.style.width = (1280*(ratio)).toString() + "px";
-        this.videoBroadcastDiv.style.height = (720*(ratio)).toString() + "px";
-    },
-    restoreVideo: function() {
-        this.videoBroadcastDiv.video.style.left = "0px";
-        this.videoBroadcastDiv.video.style.width = "1280px";
-        this.videoBroadcastDiv.video.style.height = "720px";
+const BANNER_AD = {
+    key: "1",
+    type: "banner",
+    props: {
+        width: "1024px",
+        height: "200px",
+        left: "128px",
+        top: "500px",
+        background_color: "#010175",
+        children: [
+            {
+                key: "1",
+                type: "image-container", 
+                props: {
+                    width: "120px",
+                    height: "200px",
+                    left: "0px",
+                    top: "0px",
+                    image: "./momi_original.jpg"
+                }
+            },
+            {
+                key: "2",
+                type: "text-container", 
+                props: {
+                    width: "800px",
+                    height: "200px",
+                    left: "200px",
+                    top: "0px",
+                    color: "white",
+                    textAlign: "center",
+                    fontStyle: "normal",
+                    fontWeight: "bold",
+                    fontSize: "42px",
+                    text: "Momi Shisha pravi nai-dobrite nargileta.<br>Telefon za vruzka: +49 176 43866025"
+                }
+            }
+        ]
     }
 };
 
-// RC button press handler function
-function handleKeyCode(kc) {
-    try {
-        // process buttons
-        switch (kc) {
-            case VK_RED:
-                // red button only prints to the console for now
-                console.log("Red");
-                let new_index = current_interactive_img + 1;
-                if (new_index === DUMMY_PICTURES.length) 
-                    new_index = 0;
-                document.getElementById(DUMMY_PICTURES[new_index]).style.display = "block";
-                document.getElementById(DUMMY_PICTURES[current_interactive_img]).style.display = "none";
-                current_interactive_img = new_index;
-                break;
-            case VK_GREEN:
-                // green button only prints to the console for now
-                console.log("Green");
-                break;
-            case VK_YELLOW:
-                // yellow button only prints to the console for now
-                console.log("Yellow");
-                break;
-            case VK_BLUE:
-                // blue button only prints to the console for now
-                console.log("Blue");
-                break;
-            case VK_LEFT:
-                // left button only prints to the console for now
-                console.log("Left");
-                break;
-            case VK_RIGHT:
-                // right button only prints to the console for now
-                console.log("Right");
-                break;
-            case VK_DOWN:
-                // down button only prints to the console for now
-                console.log("Down");
-                break;
-            case VK_UP:
-                // up button only prints to the console for now
-                console.log("Up");
-                break; 
-            default:
-                // pressed unhandled key only prints to the console for now
-                console.log("Other button");
-        }
+const L_BANNER_AD = {
+    key: "2",
+    type: "l-banner",
+    props: {
+        width: "256px",
+        background_color: "#010175",
+        children: [
+            {
+                key: "1",
+                type: "image-container", 
+                props: {
+                    width: "256px",
+                    height: "576px",
+                    left: "0px",
+                    top: "0px",
+                    image: "bottle-vodka-gin-isolated-on-600w-1833553141.webp"
+                }
+            },
+            {
+                key: "2",
+                type: "text-container", 
+                props: {
+                    width: "800px",
+                    height: "144px",
+                    left: "256px",
+                    top: "576px",
+                    color: "white",
+                    textAlign: "center",
+                    fontStyle: "normal",
+                    fontWeight: "normal",
+                    fontSize: "32px",
+                    text: "Top rakiqta na regiona."
+                }
+            }
+        ]
     }
-    catch (e) {
-        // handle the error cases
-    }
-    // return true to prevent default action for processed keys
-    return true;
-}
+};
 
+let dummy_counter = 0;
+let ads = [BANNER_AD, L_BANNER_AD];
+
+
+var current_scene = null;
 
 // function to called on loading the app
 function start() {
@@ -100,10 +97,10 @@ function start() {
         // error acquiring the Application object!
     } 
     else {
-        // initialize the scene
-        scene.initialize(appObject);
         appObject.show();
     }
+    // initialize the scene
+    current_scene = scene("video", "app_area");
     // first make request immediately and then set interval
     requestAd();
     setInterval(requestAd, AD_PERIOD);
@@ -119,62 +116,16 @@ function requestAd() {
         // getElementsByTagName("MediaFile")[0].getAttribute("type")    --> returns the attribute of the specified tag
         // xmlDoc.getElementsByTagName("MediaFile")[0].textContent      --> returns the text of the specified tag
     }
-    xhr.send();
+    //xhr.send(); // sending disabled for static testing
 
-    // dummy ad data
-    let ad_data = {
-        type_ad: TYPE_BANNER,
-        duration: 20 * 1000 // 20s
-    };
-    // ToDo: move the following function into the async function
-    display_ad(ad_data);
+    // create dummy ad by getting one of the two static ads
+    let ad_object = ads[dummy_counter%2];
+    dummy_counter += 1;
+
+    let ad = createAd(ad_object);
+    console.log(current_scene, ad);
+    displayAd(current_scene, ad);
+
+    setTimeout(() => {removeAd(current_scene, ad)}, 20000); // ad duration 20s 
 }
 
-function display_ad(ad_data) {
-    // ToDo: finish the actual functionality
-    if (ad_data.type_ad === TYPE_BANNER) {
-        display_banner(ad_data);
-    } else if (ad_data.type_ad === TYPE_L_BANNER) {
-        display_l_banner();
-    } else {
-        return;
-    }
-
-    setTimeout(hide_ad, ad_data.duration);
-}
-
-function display_banner(ad_data) {
-    document.getElementById("app_area").style.zIndex = "10";
-    let banner_div = document.getElementById("banner-div");
-    banner_div.style.display = "block";
-    current_ad = TYPE_BANNER;
-
-    current_interactive_img = 0;
-
-    console.log("Banner displayed");
-}
-
-function display_l_banner(ad_data) {
-    document.getElementById("app_area").style.zIndex = "1";
-    let ratio = 0.8 // dummy ratio
-    scene.resizeVideo(ratio);
-    let l_banner_div = document.getElementById("l-banner-div");
-    l_banner_div.style.display = "block";
-    current_ad = TYPE_L_BANNER;
-    console.log("L-Banner displayed");
-} 
-
-function hide_ad() {
-    if (current_ad === TYPE_BANNER) {
-        let banner_div = document.getElementById("banner-div");
-        banner_div.style.display = "none";
-        current_ad = null;
-    } else if (current_ad === TYPE_L_BANNER) {
-        let video = document.getElementById("video");
-        scene.restoreVideo();
-        let l_banner_div = document.getElementById("l-banner-div");
-        l_banner_div.style.display = "none";
-        current_ad = null;
-    }
-    console.log("Ad hided");
-}

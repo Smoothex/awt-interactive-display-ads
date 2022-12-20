@@ -2,7 +2,7 @@ import Container, {ContainerProps, ContainerType} from "./Container";
 
 export default class SlideshowContainer extends Container {
     constructor(key: string, props: SlideshowContainerProps) {
-        super(key, ContainerType.Image, props);
+        super(key, ContainerType.Slideshow, props);
     }
 }
 

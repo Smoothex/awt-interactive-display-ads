@@ -91,7 +91,8 @@ export default class Container {
 
 export enum ContainerType {
     Image = "image-container",
-    Text = "text-container"
+    Text = "text-container",
+    Slideshow = "slideshow-container"
 }
 
 export interface ContainerProps {

@@ -3,87 +3,8 @@
 //
 const AD_PERIOD = 1000 * 60 * 1; // 1 minute dummy period 
 
-const BANNER_AD = {
-    key: "1",
-    type: "banner",
-    props: {
-        width: "1024px",
-        height: "200px",
-        left: "128px",
-        top: "500px",
-        background_color: "#010175",
-        children: [
-            {
-                key: "1",
-                type: "image-container", 
-                props: {
-                    width: "120px",
-                    height: "200px",
-                    left: "0px",
-                    top: "0px",
-                    image: "./momi_original.jpg"
-                }
-            },
-            {
-                key: "2",
-                type: "text-container", 
-                props: {
-                    width: "800px",
-                    height: "200px",
-                    left: "200px",
-                    top: "0px",
-                    color: "white",
-                    textAlign: "center",
-                    fontStyle: "normal",
-                    fontWeight: "bold",
-                    fontSize: "42px",
-                    text: "Momi Shisha pravi nai-dobrite nargileta.<br>Telefon za vruzka: +49 176 43866025"
-                }
-            }
-        ]
-    }
-};
-
-const L_BANNER_AD = {
-    key: "2",
-    type: "l-banner",
-    props: {
-        width: "256px",
-        background_color: "#010175",
-        children: [
-            {
-                key: "1",
-                type: "image-container", 
-                props: {
-                    width: "256px",
-                    height: "576px",
-                    left: "0px",
-                    top: "0px",
-                    image: "bottle-vodka-gin-isolated-on-600w-1833553141.webp"
-                }
-            },
-            {
-                key: "2",
-                type: "text-container", 
-                props: {
-                    width: "800px",
-                    height: "144px",
-                    left: "256px",
-                    top: "576px",
-                    color: "white",
-                    textAlign: "center",
-                    fontStyle: "normal",
-                    fontWeight: "normal",
-                    fontSize: "32px",
-                    text: "Top rakiqta na regiona."
-                }
-            }
-        ]
-    }
-};
-
 let dummy_counter = 0;
-let ads = [BANNER_AD, L_BANNER_AD];
+let ads = ['./dummy_banner_ad.json', './dummy_l_banner_ad.json'];
 
 
 var current_scene = null;
@@ -118,14 +39,16 @@ function requestAd() {
     }
     //xhr.send(); // sending disabled for static testing
 
-    // create dummy ad by getting one of the two static ads
-    let ad_object = ads[dummy_counter%2];
+    // create dummy ad by getting one of the two local ads
+    let ad_link = ads[dummy_counter%2];
     dummy_counter += 1;
 
-    let ad = createAd(ad_object);
-    console.log(current_scene, ad);
-    displayAd(current_scene, ad);
-
-    setTimeout(() => {removeAd(current_scene, ad)}, 20000); // ad duration 20s 
+    fetch(ad_link)
+        .then((response) => response.json())
+        .then((json) => {
+            let ad = createAd(json);
+            displayAd(current_scene, ad);
+            setTimeout(() => {removeAd(current_scene, ad)}, 20000); // ad duration 20s
+        }); 
 }
 

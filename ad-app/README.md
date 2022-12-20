@@ -5,6 +5,7 @@ This folder contains currently an example for an HbbTV App with the following fe
 * (Register events for relevant remote control buttons and prints simple text to the console)
 * (At displaying banner ad the photo can be changed on pressing the red button)
 * Creating ads based on the custom JSON format by using custom utility library
+* Grabs the JSON formatted ads by fetching them from the local server
 
 
 ## Running the App
@@ -18,3 +19,5 @@ The folder contains currently the files 'main.js' and 'old_main.js'.
 'main.js' uses the initial implementation of the 'da_library.js' that does not 
 includes any functionality or interaction with remote control, therefore
 'old_main.js' is kept to show an example for using remote control events.
+
+It can be discussed if a animated transition is good idea for the ads.

@@ -1,0 +1,37 @@
+{
+    "key": "2",
+    "type": "l-banner",
+    "props": {
+        "width": "256px",
+        "background_color": "#010175",
+        "children": [
+            {
+                "key": "1",
+                "type": "image-container", 
+                "props": {
+                    "width": "256px",
+                    "height": "576px",
+                    "left": "0px",
+                    "top": "0px",
+                    "image": "./bottle-vodka-gin-isolated-on-600w-1833553141.webp"
+                }
+            },
+            {
+                "key": "2",
+                "type": "text-container", 
+                "props": {
+                    "width": "800px",
+                    "height": "144px",
+                    "left": "256px",
+                    "top": "576px",
+                    "color": "white",
+                    "textAlign": "center",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                    "fontSize": "32px",
+                    "text": "Top rakiqta na regiona."
+                }
+            }
+        ]
+    }
+}

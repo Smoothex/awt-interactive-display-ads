@@ -50,6 +50,7 @@ function createAd(adObject) {
         element.style.left = adObject.props.left;
         element.style.top = adObject.props.top;
         element.style.background = adObject.props.background_color;
+        element.style.animation = "append-animate .3s linear";
     } else if (adObject.type === "l-banner") {
         element.style.width = "1280px";
         element.style.height = "720px";

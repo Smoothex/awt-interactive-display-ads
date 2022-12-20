@@ -7,6 +7,7 @@ export default class TextContainer extends Container {
 }
 
 export interface TextContainerProps extends ContainerProps {
+    text?: string;
     color?: string;
     textAlign?: string; // center, left, right
     fontStyle?: string; // normal, italic

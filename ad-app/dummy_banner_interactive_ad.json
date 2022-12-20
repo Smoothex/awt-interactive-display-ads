@@ -1,0 +1,41 @@
+{
+    "key": "1",
+    "type": "banner",
+    "props": {
+        "width": "1024px",
+        "height": "200px",
+        "left": "128px",
+        "top": "500px",
+        "background_color": "#010175",
+        "children": [
+            {
+                "key": "1",
+                "type": "slideshow-container", 
+                "props": {
+                    "width": "120px",
+                    "height": "200px",
+                    "left": "0px",
+                    "top": "0px",
+                    "images": ["./momi_original.jpg", "./momi_red.jpg", "./momi_green.jpg"],
+                    "nextImageButton": "blue"
+                }
+            },
+            {
+                "key": "2",
+                "type": "text-container", 
+                "props": {
+                    "width": "800px",
+                    "height": "200px",
+                    "left": "200px",
+                    "top": "0px",
+                    "color": "white",
+                    "textAlign": "center",
+                    "fontStyle": "normal",
+                    "fontWeight": "bold",
+                    "fontSize": "42px",
+                    "text": "Momi Shisha pravi nai-dobrite nargileta.<br>Telefon za vruzka: +49 176 43866025"
+                }
+            }
+        ]
+    }
+}

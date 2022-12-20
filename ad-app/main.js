@@ -4,7 +4,7 @@
 const AD_PERIOD = 1000 * 60 * 1; // 1 minute dummy period 
 
 let dummy_counter = 0;
-let ads = ['./dummy_banner_ad.json', './dummy_l_banner_ad.json'];
+let ads = ['./dummy_banner_interactive_ad.json', './dummy_banner_ad.json', './dummy_l_banner_ad.json'];
 
 
 var current_scene = null;
@@ -21,7 +21,7 @@ function start() {
         appObject.show();
     }
     // initialize the scene
-    current_scene = scene("video", "app_area");
+    current_scene = scene(appObject, "video", "app_area");
     // first make request immediately and then set interval
     requestAd();
     setInterval(requestAd, AD_PERIOD);
@@ -40,13 +40,13 @@ function requestAd() {
     //xhr.send(); // sending disabled for static testing
 
     // create dummy ad by getting one of the two local ads
-    let ad_link = ads[dummy_counter%2];
+    let ad_link = ads[dummy_counter%3];
     dummy_counter += 1;
 
     fetch(ad_link)
         .then((response) => response.json())
         .then((json) => {
-            let ad = createAd(json);
+            let ad = createAd(json, current_scene);
             displayAd(current_scene, ad);
             setTimeout(() => {removeAd(current_scene, ad)}, 20000); // ad duration 20s
         }); 

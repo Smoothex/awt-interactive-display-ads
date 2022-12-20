@@ -99,7 +99,7 @@ export default class Ad {
     }
 
     removeChild(toRemoveChild: Container): void {
-        this.props.children = this.props.children.filter(currentChild => currentChild.getKey() != toRemoveChild.getKey());
+        this.props.children = this.props.children.filter(currentChild => currentChild.getKey() !== toRemoveChild.getKey());
     }
 }
 

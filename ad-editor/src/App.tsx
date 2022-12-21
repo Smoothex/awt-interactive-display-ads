@@ -8,7 +8,7 @@ function App() {
     return (
         <Box height="100vh" display="flex" flexDirection="column">
             <CssBaseline/>
-            <AppBar style={{ backgroundColor: "#00203fff" }}>
+            <AppBar style={{ backgroundColor: "#7DB46CFF" }}>
                 <Toolbar>
                     <Icon sx={{ margin: "8px" }}>
                         <img src={process.env.PUBLIC_URL + "/favicon.ico"} alt="Logo" style={{width: "24px", height: "24px"}}/>
@@ -22,7 +22,7 @@ function App() {
             <Box flex={1}>
                 <ReflexContainer orientation="vertical">
                     {/* Left split element for the ad templates and ad instances */}
-                    <ReflexElement flex={0.2}>
+                    <ReflexElement flex={0.2} minSize={200}>
                         <ReflexContainer orientation="horizontal">
                             {/* Ad Templates */}
                             <ReflexElement>
@@ -32,7 +32,7 @@ function App() {
                                     aria-labelledby="nested-list-subheader"
                                     subheader={
                                         <ListSubheader component="div" id="nested-list-subheader"
-                                                       style={{ padding: "12px 16px", backgroundColor: "#adefD1ff", color: "#00203fff" }}
+                                                       style={{ padding: "12px 16px", backgroundColor: "#E7EBE0FF", color: "#7DB46CFF" }}
                                         >
                                             <Typography component="div" variant="h6">
                                                 Ad Templates
@@ -63,7 +63,7 @@ function App() {
                                     aria-labelledby="nested-list-subheader"
                                     subheader={
                                         <ListSubheader component="div" id="nested-list-subheader"
-                                                       style={{ padding: "12px 16px", backgroundColor: "#adefD1ff", color: "#00203fff" }}
+                                                       style={{ padding: "12px 16px", backgroundColor: "#E7EBE0FF", color: "#7DB46CFF" }}
                                         >
                                             <Typography component="div" variant="h6">
                                                 Ad Instances
@@ -90,7 +90,7 @@ function App() {
                     <ReflexSplitter/>
                     {/* Right split element for the ad editor */}
                     <ReflexElement>
-                        <div>
+                        <div style={{ width: "100%", height: "100%"}}>
                             <label>
                                 Ad editor
                             </label>

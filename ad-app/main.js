@@ -7,7 +7,7 @@ let dummy_counter = 0;
 let ads = ['./dummy_banner_interactive_ad.json', './dummy_banner_ad.json', './dummy_l_banner_ad.json'];
 
 
-var current_scene = null;
+var currentAdScene = null;
 
 // function to called on loading the app
 function start() {
@@ -21,7 +21,8 @@ function start() {
         appObject.show();
     }
     // initialize the scene
-    current_scene = scene(appObject, "video", "app_area");
+    currentAdScene = adScene(appObject, "video", "app_area");
+    currentAdScene.initialize();
     // first make request immediately and then set interval
     requestAd();
     setInterval(requestAd, AD_PERIOD);
@@ -46,9 +47,9 @@ function requestAd() {
     fetch(ad_link)
         .then((response) => response.json())
         .then((json) => {
-            let ad = createAd(json, current_scene);
-            displayAd(current_scene, ad);
-            setTimeout(() => {removeAd(current_scene, ad)}, 20000); // ad duration 20s
+            let ad = currentAdScene.createAd(json);
+            currentAdScene.displayAd(ad);
+            setTimeout(() => {currentAdScene.removeAd( ad)}, 20000); // ad duration 20s
         }); 
 }
 

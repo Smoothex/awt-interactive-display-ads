@@ -1,6 +1,6 @@
 {
     "key": "1",
-    "type": "banner",
+    "type": "standard-banner",
     "props": {
         "width": "1024px",
         "height": "200px",

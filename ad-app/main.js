@@ -1,10 +1,10 @@
 //
 // This file holds the main functionality of the HbbTV app
 //
-const AD_PERIOD = 1000 * 60 * 1; // 1 minute dummy period 
+const AD_PERIOD = 1000 * 60 * 0.1; // 1 minute dummy period 
 
 let dummy_counter = 0;
-let ads = ['./dummy_banner_interactive_ad.json', './dummy_banner_ad.json', './dummy_l_banner_ad.json'];
+let ads = ['./dummy_l_banner_ad.json', './dummy_l_banner_ad.json', './dummy_banner_ad.json'];
 
 
 var currentAdScene = null;
@@ -24,7 +24,7 @@ function start() {
     currentAdScene = adScene(appObject, "video", "app_area");
     currentAdScene.initialize();
     // first make request immediately and then set interval
-    requestAd();
+    setTimeout(() => {requestAd()}, 1000);
     setInterval(requestAd, AD_PERIOD);
 }
 
@@ -49,7 +49,7 @@ function requestAd() {
         .then((json) => {
             let ad = currentAdScene.createAd(json);
             currentAdScene.displayAd(ad);
-            setTimeout(() => {currentAdScene.removeAd( ad)}, 20000); // ad duration 20s
+            setTimeout(() => {currentAdScene.removeAd( ad)}, 5000); // ad duration 20s
         }); 
 }
 

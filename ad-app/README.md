@@ -5,6 +5,7 @@ This folder contains currently an example for an HbbTV App with the following fe
 * At displaying ad the photo can be changed on pressing the red button (possible for particular ad). A hint for the used button is shown
 * Creating ads based on the custom JSON format by using custom utility library
 * Grabs the JSON formatted ads by fetching them from the local server
+* Displaying and removing ads with smooth transitions
 
 
 ## Running the App

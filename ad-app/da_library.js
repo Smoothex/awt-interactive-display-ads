@@ -54,6 +54,7 @@ function adScene(app, videoId, safeAreaId) {
         videoElement.style.left = width;
         videoElement.style.width = (1280*(ratio)).toString() + "px";
         videoElement.style.height = (720*(ratio)).toString() + "px";
+        
     };
 
     /**
@@ -138,7 +139,7 @@ function adScene(app, videoId, safeAreaId) {
             element.style.left = adObject.props.left;
             element.style.top = adObject.props.top;
             element.style.background = adObject.props.background_color;
-            element.style.animation = "append-animate .3s linear";
+            element.style.animation = "append-animate .5s linear";
         } else if (adObject.type === AdType.LBanner) {
             element.style.width = "1280px";
             element.style.height = "720px";
@@ -307,10 +308,11 @@ function adScene(app, videoId, safeAreaId) {
      */
     function removeAd(ad) {
         if (ad.type === AdType.StandardBanner) {
-            safeAreaElement.removeChild(ad.element);
+            ad.element.style.animation = "remove-animate .5s linear";
+            setTimeout(() => {safeAreaElement.removeChild(ad.element);}, 500);
         } else if (ad.type === AdType.LBanner) {
             restoreVideo();
-            safeAreaElement.removeChild(ad.element);
+            setTimeout(() => {safeAreaElement.removeChild(ad.element)}, 1000);
         }
     }
     
@@ -318,6 +320,7 @@ function adScene(app, videoId, safeAreaId) {
      * public: Perform necessary tasks before creating ads. 
      */
     function initialize() {
+        videoElement.style.transition = "1s";
         initKeys(COLOR_BUTTON_MASK);
     }
 

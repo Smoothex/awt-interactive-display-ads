@@ -36,6 +36,7 @@ function generateVastResponse() {
   
   // <VAST> tag
   vastResponse.startElement('VAST');
+  vastResponse.writeAttribute('version', 4.1);
   
   // <Ad> tag
   vastResponse.startElement('Ad');
@@ -46,17 +47,17 @@ function generateVastResponse() {
   
   // <AdSystem> tag
   vastResponse.startElement('AdSystem');
-  vastResponse.text('Test');
+  vastResponse.text('A NodeJS HTTP server');
   vastResponse.endElement();
   
   // <AdTitle> tag
   vastResponse.startElement('AdTitle');
-  vastResponse.text('PAK GURBA');
+  vastResponse.text('The title of the Ad');
   vastResponse.endElement();
   
   // <Impression> tag
   vastResponse.startElement('Description');
-  vastResponse.text('SHTE MI GLEDASH PAK GURBA');
+  vastResponse.text('A description of the ad itself');
   vastResponse.endElement();
   
   // <Creatives> tag
@@ -65,23 +66,20 @@ function generateVastResponse() {
   // <Creative> tag
   vastResponse.startElement('Creative');
   
-  // <Linear> tag
+  // <NonLinearAds> tag
+  vastResponse.startElement('NonLinearAds');
+
+  // <NonLinear> tag
   vastResponse.startElement('NonLinear');
+
+  // <StaticResource> tag
+  vastResponse.startElement('StaticResource');
+  vastResponse.text('Link to where the DA is hosted');
+  vastResponse.endElement();
   
   // <Duration> tag
   vastResponse.startElement('Duration');
   vastResponse.text('00:00:30');
-  vastResponse.endElement();
-  
-  // <MediaFiles> tag
-  vastResponse.startElement('MediaFiles');
-  
-  // <MediaFile> tag
-  vastResponse.startElement('MediaFile');
-  vastResponse.writeAttribute('type', 'video/mp4')
-  vastResponse.writeAttribute('width', '1280')
-  vastResponse.writeAttribute('height', '720')
-  vastResponse.text('https://youtu.be/QNUUgo1ewEw')
   vastResponse.endElement();
 
   // Return an XML string

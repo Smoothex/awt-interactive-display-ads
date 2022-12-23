@@ -8,10 +8,10 @@
          <Creatives>
             <Creative>
                <NonLinearAds>
-		  <NonLinear>
+		            <NonLinear>
                      <StaticResource>Link to where the DAs are hosted</StaticResource>
-		     <Duration>00:01:00</Duration>
-		  <NonLinear>
+		               <Duration>00:01:00</Duration>
+		            <NonLinear>
                <NonLinearAds>
             </Creative>
          </Creatives>

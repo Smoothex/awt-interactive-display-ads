@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VAST version="4.1">
+   <Ad id="4">
+      <InLine>
+         <AdSystem>A NodeJS HTTP server</AdSystem>
+         <AdTitle>The title of the Ad</AdTitle>
+         <Description>A description of the ad itself</Description>
+         <Creatives>
+            <Creative>
+               <NonLinearAds>
+		  <NonLinear>
+                     <StaticResource>Link to where the DAs are hosted</StaticResource>
+		  <NonLinear>
+               <NonLinearAds>
+            </Creative>
+         </Creatives>
+      </InLine>
+   </Ad>
+</VAST>

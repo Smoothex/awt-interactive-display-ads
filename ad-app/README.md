@@ -1,6 +1,6 @@
 # HbbTV Application
 This folder contains currently an example for an HbbTV App with the following features:
-* Every minute display a dummy ad every minute for a period of 20s 
+* On a predefined interval the app either display a dummy ad or make a VAST request to a server depending on the value of the variable 'developmentMode' 
 * This ad could be standard banner od L shaped banner (change ad type in the request for testing the both types)
 * At displaying ad the photo can be changed on pressing the red button (possible for particular ad). A hint for the used button is shown
 * Creating ads based on the custom JSON format by using custom utility library

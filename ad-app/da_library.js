@@ -308,8 +308,8 @@ function adScene(app, videoId, safeAreaId) {
      */
     function removeAd(ad) {
         if (ad.type === AdType.StandardBanner) {
-            ad.element.style.animation = "remove-animate .5s linear";
             setTimeout(() => {safeAreaElement.removeChild(ad.element);}, 500);
+            ad.element.style.animation = "remove-animate .5s linear";
         } else if (ad.type === AdType.LBanner) {
             restoreVideo();
             setTimeout(() => {safeAreaElement.removeChild(ad.element)}, 1000);

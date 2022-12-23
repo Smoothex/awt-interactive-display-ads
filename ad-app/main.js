@@ -1,11 +1,15 @@
 //
 // This file holds the main functionality of the HbbTV app
 //
-const AD_PERIOD = 1000 * 60 * 0.1; // 1 minute dummy period 
+const VAST_URL = "http://127.0.0.1:8080/vast";
+const AD_PERIOD = 1000 * 60 * 0.2; // 0.2 minutes dummy period 
+const developmentMode = false;
 
-let dummy_counter = 0;
-let ads = ['./dummy_l_banner_ad.json', './dummy_l_banner_ad.json', './dummy_banner_ad.json'];
-
+if (developmentMode) {
+    var dummy_duration = 5000;
+    var dummy_counter = 0;
+    var dummy_ads = ['./dummy_l_banner_ad.json', './dummy_banner_interactive_ad.json', './dummy_banner_ad.json'];
+}
 
 var currentAdScene = null;
 
@@ -20,36 +24,47 @@ function start() {
     else {
         appObject.show();
     }
-    // initialize the scene
+    // initialize the scene object
     currentAdScene = adScene(appObject, "video", "app_area");
     currentAdScene.initialize();
     // first make request immediately and then set interval
-    setTimeout(() => {requestAd()}, 1000);
+    requestAd();
     setInterval(requestAd, AD_PERIOD);
 }
 
 function requestAd() {
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", "http://127.0.0.1:8080/vast.xml");
-    xhr.setRequestHeader("Accept", "application/xml");
-    xhr.onload = () => {
-        xmlDoc = xhr.responseXML;   // a document object containing the XML
-        console.log(xmlDoc.getElementsByTagName("Ad")[0]);
-        // getElementsByTagName("MediaFile")[0].getAttribute("type")    --> returns the attribute of the specified tag
-        // xmlDoc.getElementsByTagName("MediaFile")[0].textContent      --> returns the text of the specified tag
-    }
-    //xhr.send(); // sending disabled for static testing
+    if (developmentMode) {
+        // create dummy ad by getting one of the two local ads
+        ad_url = dummy_ads[dummy_counter%3];
+        dummy_counter += 1;
 
-    // create dummy ad by getting one of the two local ads
-    let ad_link = ads[dummy_counter%3];
-    dummy_counter += 1;
-
-    fetch(ad_link)
+        fetch(ad_url)
         .then((response) => response.json())
         .then((json) => {
             let ad = currentAdScene.createAd(json);
             currentAdScene.displayAd(ad);
-            setTimeout(() => {currentAdScene.removeAd( ad)}, 5000); // ad duration 20s
+            setTimeout(() => {currentAdScene.removeAd( ad)}, dummy_duration);
         }); 
+    } else {
+        // request a VAST server for an ad and display it
+        makeVASTRequest(VAST_URL)
+        .then(function (VASTResponse) {
+            console.log(VASTResponse);
+            /* Uncomment when the server is ready to use
+            fetch(VASTResponse.url)
+            .then((response) => response.json())
+            .then((json) => {
+                let ad = currentAdScene.createAd(json);
+                currentAdScene.displayAd(ad);
+                setTimeout(() => {currentAdScene.removeAd( ad)}, VASTResponse.duration*1000);
+            }); 
+            */
+        })
+        .catch(function (err) {
+            console.error('Error occurred at requesting an ad!', err.statusText);
+            // ToDO: handle an error at requesting an ad
+        });
+    }
+    return true;
 }
 

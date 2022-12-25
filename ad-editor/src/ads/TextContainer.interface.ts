@@ -1,9 +1,8 @@
-import Container, {ContainerProps, ContainerType} from "./Container";
+import Container, {ContainerProps, ContainerType} from "./Container.interface";
 
-export default class TextContainer extends Container {
-    constructor(key: string, props: TextContainerProps) {
-        super(key, ContainerType.Text, props);
-    }
+export default interface TextContainer extends Container {
+    type: ContainerType.Text;
+    props: TextContainerProps;
 }
 
 export interface TextContainerProps extends ContainerProps {

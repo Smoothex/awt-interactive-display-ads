@@ -1,5 +1,6 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import Ad, {AdProps, AdType} from "../../ads/Ad.interface";
+import { v4 as uuidv4 } from 'uuid';
 
 interface AdsState {
     ads: Ad[],
@@ -14,7 +15,7 @@ const adSlice = createSlice({
     initialState,
     reducers: {
         createAdTemplate: (state, action: PayloadAction<{name: string, type: AdType}>) => {
-            const key: string = new Date().getTime().toString();
+            const key: string = uuidv4();
             const name: string = action.payload.name;
             const type: AdType = action.payload.type;
             const props: AdProps = {
@@ -36,7 +37,7 @@ const adSlice = createSlice({
             if(adTemplate === undefined) {
                 return;
             }
-            const strNewKey: string = new Date().getTime().toString();
+            const strNewKey: string = uuidv4();
             const strNewName: string = action.payload.name;
 
             const adInstance = structuredClone(adTemplate);

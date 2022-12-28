@@ -13,7 +13,7 @@ const AdTemplateList = () => {
 
     return (
         <List
-            sx={{width: '100%', 'min-width': '100px'}}
+            sx={{width: '100%', minWidth: '100px'}}
             component="nav"
             aria-labelledby="nested-list-subheader"
             subheader={<AdTemplateListSubheader />}

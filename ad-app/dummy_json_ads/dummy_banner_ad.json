@@ -10,14 +10,13 @@
         "children": [
             {
                 "key": "1",
-                "type": "slideshow-container", 
+                "type": "image-container", 
                 "props": {
                     "width": "120px",
                     "height": "200px",
                     "left": "0px",
                     "top": "0px",
-                    "images": ["./momi_original.jpg", "./momi_red.jpg", "./momi_green.jpg"],
-                    "nextImageButton": "blue"
+                    "image": "./media/momi_original.jpg"
                 }
             },
             {
@@ -30,6 +29,7 @@
                     "top": "0px",
                     "color": "white",
                     "textAlign": "center",
+                    "fontFamily": "Arial, Helvetica, sans-serif",
                     "fontStyle": "normal",
                     "fontWeight": "bold",
                     "fontSize": "42px",
@@ -39,3 +39,4 @@
         ]
     }
 }
+

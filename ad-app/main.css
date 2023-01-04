@@ -52,8 +52,6 @@ div.safe_area
 	}
 	to {
 		transform: scale(0);
-		opacity: 0;	
+		opacity: 0;
 	}
 }
-
-

@@ -1,0 +1,70 @@
+{
+    "key": "10",
+    "type": "standard-banner",
+    "props": {
+        "width": "1024px",
+        "height": "200px",
+        "left": "128px",
+        "top": "500px",
+        "background_color": "#ffffff",
+        "children": [
+            {
+                "key": "1",
+                "type": "image-container", 
+                "props": {
+                    "width": "224px",
+                    "height": "200px",
+                    "left": "0px",
+                    "top": "0px",
+                    "image": "./media/fake_logo.jpg"
+                }
+            },
+            {
+                "key": "2",
+                "type": "text-container", 
+                "props": {
+                    "width": "600px",
+                    "height": "100px",
+                    "left": "224px",
+                    "top": "30px",
+                    "color": "black",
+                    "fontFamily": "Arial, Helvetica, sans-serif",
+                    "textAlign": "center",
+                    "fontStyle": "normal",
+                    "fontWeight": "bold",
+                    "fontSize": "24px",
+                    "text": "Experience the performance of this new fake tablet!<br>Now in even more hilarious colors!"
+                }
+            },
+            {
+                "key": "3",
+                "type": "text-container", 
+                "props": {
+                    "width": "600px",
+                    "height": "100px",
+                    "left": "224px",
+                    "top": "100px",
+                    "color": "black",
+                    "textAlign": "center",
+                    "fontFamily": "Arial, Helvetica, sans-serif",
+                    "fontStyle": "normal",
+                    "fontWeight": "bold",
+                    "fontSize": "32px",
+                    "text": "Buy now for 999$"
+                }
+            },
+            {
+                "key": "4",
+                "type": "slideshow-container", 
+                "props": {
+                    "width": "200px",
+                    "height": "200px",
+                    "left": "824px",
+                    "top": "0px",
+                    "images": ["./media/silver_tablet.jpg", "./media/blue_tablet.jpg", "./media/yellow_tablet.jpg", "./media/red_tablet.jpg"],
+                    "nextImageButton": "blue"
+                }
+            }
+        ]
+    }
+}

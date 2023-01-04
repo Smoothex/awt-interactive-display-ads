@@ -2,13 +2,13 @@
 // This file holds the main functionality of the HbbTV app
 //
 const VAST_URL = "http://127.0.0.1:8080/vast";
-const AD_PERIOD = 1000 * 60 * 0.2; // 0.2 minutes dummy period 
-const developmentMode = false;
+const AD_PERIOD = 1000 * 60 * 1; // 0.2 minutes dummy period 
+const developmentMode = true;
 
 if (developmentMode) {
-    var dummy_duration = 5000;
+    var dummy_duration = 30000;
     var dummy_counter = 0;
-    var dummy_ads = ['./dummy_l_banner_ad.json', './dummy_banner_interactive_ad.json', './dummy_banner_ad.json'];
+    var dummy_ads = ['./dummy_json_ads/test_tablet_ad.json', './dummy_json_ads/test_beer_ad.json'];
 }
 
 var currentAdScene = null;
@@ -35,7 +35,7 @@ function start() {
 function requestAd() {
     if (developmentMode) {
         // create dummy ad by getting one of the two local ads
-        ad_url = dummy_ads[dummy_counter%3];
+        ad_url = dummy_ads[dummy_counter%dummy_ads.length];
         dummy_counter += 1;
 
         fetch(ad_url)

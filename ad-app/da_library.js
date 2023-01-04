@@ -270,16 +270,18 @@ function adScene(app, videoId, safeAreaId) {
      */
     function createTextContainer(props) {
         let element = document.createElement("p");
+        element.style.margin = "0px";
         element.style.position = "absolute";
         element.style.width = props.width;
         element.style.height = props.height;
         element.style.left = props.left;
         element.style.top = props.top;
+        element.style.textAlign = props.textAlign;
+        element.style.fontFamily = props.fontFamily;
         element.style.fontStyle = props.fontStyle;
         element.style.fontSize = props.fontSize;
         element.style.fontWeight = props.fontWeight;
         element.style.color = props.color;
-        element.style.textAlign = props.textAlign;
         element.innerHTML = props.text;
 
         return element;
@@ -308,7 +310,7 @@ function adScene(app, videoId, safeAreaId) {
      */
     function removeAd(ad) {
         if (ad.type === AdType.StandardBanner) {
-            setTimeout(() => {safeAreaElement.removeChild(ad.element);}, 500);
+            setTimeout(() => {safeAreaElement.removeChild(ad.element);}, 450);
             ad.element.style.animation = "remove-animate .5s linear";
         } else if (ad.type === AdType.LBanner) {
             restoreVideo();

@@ -1,0 +1,83 @@
+{
+    "key": "11",
+    "type": "l-banner",
+    "props": {
+        "width": "256px",
+        "background_color": "white",
+        "children": [
+            {
+                "key": "1",
+                "type": "image-container", 
+                "props": {
+                    "width": "256px",
+                    "height": "576px",
+                    "left": "0px",
+                    "top": "0px",
+                    "image": "./media/beer_bottle.jpg"
+                }
+            },
+            {
+                "key": "2",
+                "type": "text-container", 
+                "props": {
+                    "width": "800px",
+                    "height": "50px",
+                    "left": "256px",
+                    "top": "596px",
+                    "color": "#002500",
+                    "textAlign": "center",
+                    "fontFamily": "Luminari, fantasy",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                    "fontSize": "20px",
+                    "text": "Regional!"
+                }
+            },
+            {
+                "key": "3",
+                "type": "text-container", 
+                "props": {
+                    "width": "800px",
+                    "height": "50px",
+                    "left": "256px",
+                    "top": "636px",
+                    "color": "#004500",
+                    "textAlign": "center",
+                    "fontFamily": "Luminari, fantasy",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                    "fontSize": "25px",
+                    "text": "Lecker!"
+                }
+            },
+            {
+                "key": "4",
+                "type": "text-container", 
+                "props": {
+                    "width": "800px",
+                    "height": "144px",
+                    "left": "256px",
+                    "top": "676px",
+                    "color": "#367a36",
+                    "textAlign": "center",
+                    "fontFamily": "Luminari, fantasy",
+                    "fontStyle": "normal",
+                    "fontWeight": "normal",
+                    "fontSize": "30px",
+                    "text": "Billig!"
+                }
+            },
+            {
+                "key": "5",
+                "type": "image-container", 
+                "props": {
+                    "width": "180px",
+                    "height": "144px",
+                    "left": "1100px",
+                    "top": "576px",
+                    "image": "./media/hops.jpg"
+                }
+            }
+        ]
+    }
+}

@@ -13,7 +13,7 @@
                     "height": "576px",
                     "left": "0px",
                     "top": "0px",
-                    "image": "./bottle-vodka-gin-isolated-on-600w-1833553141.webp"
+                    "image": "./media/bottle-vodka-gin-isolated-on-600w-1833553141.webp"
                 }
             },
             {
@@ -26,6 +26,7 @@
                     "top": "576px",
                     "color": "white",
                     "textAlign": "center",
+                    "fontFamily": "Arial, Helvetica, sans-serif",
                     "fontStyle": "normal",
                     "fontWeight": "normal",
                     "fontSize": "32px",

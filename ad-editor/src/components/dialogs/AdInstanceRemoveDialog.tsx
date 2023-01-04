@@ -8,25 +8,25 @@ import DialogTitle from '@mui/material/DialogTitle';
 import {Cancel, DeleteForever as Remove} from "@mui/icons-material";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../app/store";
-import {closeRemoveAdTemplateDialog} from "../../features/dialog/dialogSlice";
+import {closeAdInstanceRemoveDialog} from "../../features/dialog/dialogSlice";
 import {removeAd} from "../../features/ad/adSlice";
 
-export default function RemoveAdTemplateDialog() {
-    const { removeAdTemplateDialogProps } = useSelector((store: RootState) => store.dialog);
+export default function AdInstanceRemoveDialog() {
+    const { adInstanceRemoveDialogProps } = useSelector((store: RootState) => store.dialog);
     const dispatch = useDispatch();
 
     const handleClose = () => {
-        dispatch(closeRemoveAdTemplateDialog());
+        dispatch(closeAdInstanceRemoveDialog());
     };
 
     const handleRemove = () => {
-        dispatch(removeAd({key: removeAdTemplateDialogProps.adKey}));
-        dispatch(closeRemoveAdTemplateDialog());
+        dispatch(removeAd({key: adInstanceRemoveDialogProps.adKey}));
+        dispatch(closeAdInstanceRemoveDialog());
     }
 
     return (
         <Dialog
-            open={ removeAdTemplateDialogProps.isOpen }
+            open={ adInstanceRemoveDialogProps.isOpen }
             onClose={handleClose}
             onKeyUp={(e) => {
                 if (e.key === 'Enter') {
@@ -37,7 +37,7 @@ export default function RemoveAdTemplateDialog() {
             <DialogTitle>Confirm Removal</DialogTitle>
             <DialogContent dividers>
                 <DialogContentText sx={{ marginBottom: "0.5rem" }}>
-                    Remove the ad template "{removeAdTemplateDialogProps.adName}"?
+                    Remove the ad instance "{adInstanceRemoveDialogProps.adName}"?
                 </DialogContentText>
             </DialogContent>
             <DialogActions>

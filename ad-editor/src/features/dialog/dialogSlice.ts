@@ -4,42 +4,72 @@ import {
 } from "@reduxjs/toolkit";
 
 const initialState = {
-    isCreateAdTemplateDialogOpen: false,
-    removeAdTemplateDialogProps : {
+    adTemplateCreateDialogProps: {
+        isOpen: false
+    },
+    adTemplateRemoveDialogProps : {
         isOpen: false,
         adName: "",
         adKey: "",
-    }
+    },
+    adInstanceCreateDialogProps: {
+        isOpen: false
+    },
+    adInstanceRemoveDialogProps: {
+        isOpen: false,
+        adName: "",
+        adKey: "",
+    },
 }
 
 const dialogSlice = createSlice({
     name: "dialog",
     initialState: initialState,
     reducers: {
-        openCreateAdTemplateDialog: (state) => {
-            state.isCreateAdTemplateDialogOpen = true;
+        openAdTemplateCreateDialog: (state) => {
+            state.adTemplateCreateDialogProps.isOpen = true;
         },
-        closeCreateAdTemplateDialog: (state) => {
-            state.isCreateAdTemplateDialogOpen = false;
+        closeAdTemplateCreateDialog: (state) => {
+            state.adTemplateCreateDialogProps.isOpen = false;
         },
-        openRemoveAdTemplateDialog: (state, action:PayloadAction<{ adName: string, adKey: string }>) => {
-            state.removeAdTemplateDialogProps.isOpen = true;
-            state.removeAdTemplateDialogProps.adName = action.payload.adName;
-            state.removeAdTemplateDialogProps.adKey = action.payload.adKey;
+        openAdTemplateRemoveDialog: (state, action:PayloadAction<{ adName: string, adKey: string }>) => {
+            state.adTemplateRemoveDialogProps.isOpen = true;
+            state.adTemplateRemoveDialogProps.adName = action.payload.adName;
+            state.adTemplateRemoveDialogProps.adKey = action.payload.adKey;
         },
-        closeRemoveAdTemplateDialog: (state) => {
-            state.removeAdTemplateDialogProps.isOpen = false;
-            state.removeAdTemplateDialogProps.adName = "";
-            state.removeAdTemplateDialogProps.adKey = "";
-        }
+        closeAdTemplateRemoveDialog: (state) => {
+            state.adTemplateRemoveDialogProps.isOpen = false;
+            state.adTemplateRemoveDialogProps.adName = "";
+            state.adTemplateRemoveDialogProps.adKey = "";
+        },
+        openAdInstanceCreateDialog: (state) => {
+            state.adInstanceCreateDialogProps.isOpen = true;
+        },
+        closeAdInstanceCreateDialog: (state) => {
+            state.adInstanceCreateDialogProps.isOpen = false;
+        },
+        openAdInstanceRemoveDialog: (state, action:PayloadAction<{ adName: string, adKey: string }>) => {
+            state.adInstanceRemoveDialogProps.isOpen = true;
+            state.adInstanceRemoveDialogProps.adName = action.payload.adName;
+            state.adInstanceRemoveDialogProps.adKey = action.payload.adKey;
+        },
+        closeAdInstanceRemoveDialog: (state) => {
+            state.adInstanceRemoveDialogProps.isOpen = false;
+            state.adInstanceRemoveDialogProps.adName = "";
+            state.adInstanceRemoveDialogProps.adKey = "";
+        },
     }
 });
 
 export const {
-    openCreateAdTemplateDialog,
-    closeCreateAdTemplateDialog,
-    openRemoveAdTemplateDialog,
-    closeRemoveAdTemplateDialog
+    openAdTemplateCreateDialog,
+    closeAdTemplateCreateDialog,
+    openAdTemplateRemoveDialog,
+    closeAdTemplateRemoveDialog,
+    openAdInstanceCreateDialog,
+    closeAdInstanceCreateDialog,
+    openAdInstanceRemoveDialog,
+    closeAdInstanceRemoveDialog
 } = dialogSlice.actions;
 
 export default dialogSlice.reducer;

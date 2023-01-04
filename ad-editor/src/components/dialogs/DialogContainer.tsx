@@ -1,12 +1,16 @@
 import React from 'react';
-import CreateAdTemplateDialog from "./CreateAdTemplateDialog";
-import RemoveAdTemplateDialog from "./RemoveAdTemplateDialog";
+import AdTemplateCreateDialog from "./AdTemplateCreateDialog";
+import AdTemplateRemoveDialog from "./AdTemplateRemoveDialog";
+import AdInstanceCreateDialog from "./AdInstanceCreateDialog";
+import AdInstanceRemoveDialog from "./AdInstanceRemoveDialog";
 
 const DialogContainer = () => {
     return (
         <>
-            <CreateAdTemplateDialog />
-            <RemoveAdTemplateDialog />
+            <AdTemplateCreateDialog />
+            <AdTemplateRemoveDialog />
+            <AdInstanceCreateDialog />
+            <AdInstanceRemoveDialog />
         </>
     );
 };

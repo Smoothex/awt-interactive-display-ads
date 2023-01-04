@@ -30,6 +30,13 @@ const adSlice = createSlice({
                 isTemplate: true
             }
             state.ads.push(ad);
+            state.ads = state.ads.sort(function(a, b){
+                let x = a.name.toLowerCase();
+                let y = b.name.toLowerCase();
+                if (x < y) {return -1;}
+                if (x > y) {return 1;}
+                return 0;
+            });
         },
         createAdInstance: (state, action: PayloadAction<{name: string, adTemplateKey: string}>) => {
             const adTemplateKey = action.payload.adTemplateKey;
@@ -40,10 +47,19 @@ const adSlice = createSlice({
             const strNewKey: string = uuidv4();
             const strNewName: string = action.payload.name;
 
-            const adInstance = structuredClone(adTemplate);
+            //-- Create a deep clone of the ad template
+            const adInstance = JSON.parse(JSON.stringify(adTemplate));
             adInstance.key = strNewKey;
             adInstance.name = strNewName;
             adInstance.isTemplate = false;
+            state.ads.push(adInstance);
+            state.ads = state.ads.sort(function(a, b){
+                let x = a.name.toLowerCase();
+                let y = b.name.toLowerCase();
+                if (x < y) {return -1;}
+                if (x > y) {return 1;}
+                return 0;
+            });
         },
         removeAd: (state, action: PayloadAction<{ key: string }>) => {
             const adKey: string = action.payload.key;
@@ -66,6 +82,11 @@ const adSlice = createSlice({
     }
 });
 
-export const {createAdTemplate, removeAd, downloadAdAsJson} = adSlice.actions;
+export const {
+    createAdTemplate,
+    createAdInstance,
+    removeAd,
+    downloadAdAsJson
+} = adSlice.actions;
 
 export default adSlice.reducer;

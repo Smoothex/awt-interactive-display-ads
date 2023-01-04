@@ -5,7 +5,7 @@ import {
     Typography
 } from "@mui/material";
 import {AddToPhotos} from "@mui/icons-material";
-import {openCreateAdTemplateDialog} from "../../features/dialog/dialogSlice";
+import {openAdInstanceCreateDialog} from "../../features/dialog/dialogSlice";
 import {useDispatch} from "react-redux";
 
 const AdInstanceListSubheader = () => {
@@ -25,7 +25,7 @@ const AdInstanceListSubheader = () => {
                     variant="contained"
                     startIcon={<AddToPhotos />}
                     style={{ marginLeft: "auto" }}
-                    onClick={() => dispatch(openCreateAdTemplateDialog())}>
+                    onClick={() => dispatch(openAdInstanceCreateDialog())}>
                     New
                 </Button>
             </Typography>

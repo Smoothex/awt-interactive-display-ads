@@ -8,7 +8,7 @@ import {ListItemIcon, ListItemText} from "@mui/material";
 import {useDispatch} from "react-redux";
 import Ad from "../../ads/Ad.interface";
 import {downloadAdAsJson} from "../../features/ad/adSlice";
-import {openRemoveAdTemplateDialog} from "../../features/dialog/dialogSlice";
+import {openAdTemplateRemoveDialog} from "../../features/dialog/dialogSlice";
 
 export default function AdTemplateMoreMenu({ ad }: { ad: Ad }) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -28,7 +28,7 @@ export default function AdTemplateMoreMenu({ ad }: { ad: Ad }) {
     }
 
     const handleRemoveAdTemplate = () => {
-        dispatch(openRemoveAdTemplateDialog({adName: ad.name, adKey: ad.key}));
+        dispatch(openAdTemplateRemoveDialog({adName: ad.name, adKey: ad.key}));
         setAnchorEl(null);
     }
 

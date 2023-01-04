@@ -13,27 +13,27 @@ import {AdType} from "../../ads/Ad.interface";
 import {useDispatch, useSelector} from "react-redux";
 import {createAdTemplate} from "../../features/ad/adSlice";
 import {RootState} from "../../app/store";
-import {closeCreateAdTemplateDialog} from "../../features/dialog/dialogSlice";
+import {closeAdTemplateCreateDialog} from "../../features/dialog/dialogSlice";
 
-export default function CreateAdTemplateDialog() {
-    const {isCreateAdTemplateDialogOpen} = useSelector((store: RootState) => store.dialog);
+export default function AdTemplateCreateDialog() {
+    const {adTemplateCreateDialogProps} = useSelector((store: RootState) => store.dialog);
     const [name, setName] = useState("");
     const [type, setType] = useState(AdType.StandardBanner);
     const dispatch = useDispatch();
 
     const handleClose = () => {
-        dispatch(closeCreateAdTemplateDialog());
+        dispatch(closeAdTemplateCreateDialog());
     };
 
     const handleCreate = () => {
         dispatch(createAdTemplate({ name: name, type: type }));
-        dispatch(closeCreateAdTemplateDialog());
+        dispatch(closeAdTemplateCreateDialog());
         setName("");
     }
 
     return (
         <Dialog
-            open={isCreateAdTemplateDialogOpen}
+            open={adTemplateCreateDialogProps.isOpen}
             onClose={handleClose}
             onKeyUp={(e) => {
                 if (e.key === 'Enter') {
@@ -44,7 +44,7 @@ export default function CreateAdTemplateDialog() {
             <DialogTitle>New template</DialogTitle>
             <DialogContent dividers>
                 <DialogContentText sx={{ marginBottom: "0.5rem" }}>
-                    To create a new template, please provide a name for the template and choose the template type.
+                    To create a new ad template, please provide a name for the template and choose the template type.
                 </DialogContentText>
                 <TextField
                     id="name"

@@ -18,12 +18,12 @@ const server = http.createServer((request, response) => {
       let randomAd = nonEmptyLines[Math.floor(Math.random() * nonEmptyLines.length)];
 
       // extract info from the chosen ad
-      const linkRegex = /<(.*?)>/;
+      const linkRegex = /(https?:\/\/[^\s]+)/;
       const idRegex = /DA_(.*?):/;
       const AdTitleRegex = /^(\w+):/;
-      let DA_title = AdTitleRegex.exec(randomAd)[1];
-      let DA_id = idRegex.exec(randomAd)[1];
-      let DA_link = linkRegex.exec(randomAd)[1];
+      let DA_link = linkRegex.exec(randomAd)[0];
+      let DA_id = idRegex.exec(randomAd)[0];
+      let DA_title = AdTitleRegex.exec(randomAd)[0];
 
       // use the extracted info to generate a VAST response
       const vastResponse = generateVastResponse(DA_title, DA_id, DA_link);

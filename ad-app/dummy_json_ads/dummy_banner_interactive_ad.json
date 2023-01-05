@@ -16,7 +16,7 @@
                     "height": "200px",
                     "left": "0px",
                     "top": "0px",
-                    "images": ["./media/momi_original.jpg", "./media/momi_red.jpg", "./media/momi_green.jpg"],
+                    "images": ["./media/silver_tablet.jpg", "./media/red_tabled.jpg", "./media/yellow_tablet.jpg"],
                     "nextImageButton": "blue"
                 }
             },
@@ -34,7 +34,7 @@
                     "fontStyle": "normal",
                     "fontWeight": "bold",
                     "fontSize": "42px",
-                    "text": "Momi Shisha pravi nai-dobrite nargileta.<br>Telefon za vruzka: +49 176 43866025"
+                    "text": "Best tablet in the world!"
                 }
             }
         ]

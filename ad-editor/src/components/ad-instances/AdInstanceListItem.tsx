@@ -1,4 +1,4 @@
-import React from 'react';
+import {MouseEventHandler} from 'react';
 import {
     Divider,
     ListItem,
@@ -10,15 +10,28 @@ import AdInstanceMoreMenu from "./AdInstanceMoreMenu";
 import {ImageAspectRatio} from "@mui/icons-material";
 import Ad from "../../ads/Ad.interface";
 
-const AdInstanceListItem = ({currentAd}: {currentAd: Ad}) => {
+interface AdInstanceListItemProps {
+    currentAd: Ad;
+    onClick: MouseEventHandler<HTMLElement>;
+    selected: boolean;
+}
+
+const AdInstanceListItem = (props: AdInstanceListItemProps) => {
+    const {
+        currentAd,
+        onClick,
+        selected
+    }: AdInstanceListItemProps = props;
+
     return (
         <ListItem
             secondaryAction={
                 <AdInstanceMoreMenu ad={currentAd} />
             }
             disablePadding
+            onClick={onClick}
         >
-            <ListItemButton>
+            <ListItemButton selected={selected}>
                 <ListItemIcon style={{minWidth: 0, marginRight: 16}}>
                     <ImageAspectRatio/>
                 </ListItemIcon>

@@ -10,7 +10,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "../../app/store";
 import {closeAdTemplateRemoveDialog} from "../../features/dialog/dialogSlice";
 import {removeAd} from "../../features/ad/adSlice";
-import {setDiagramStarter} from "../../features/diagram/diagramSlice";
 
 export default function AdTemplateRemoveDialog() {
     const { adTemplateRemoveDialogProps } = useSelector((store: RootState) => store.dialog);
@@ -21,7 +20,6 @@ export default function AdTemplateRemoveDialog() {
     };
 
     const handleRemove = () => {
-        dispatch(setDiagramStarter({diagramStarter: null}));
         dispatch(removeAd({key: adTemplateRemoveDialogProps.adKey}));
         dispatch(closeAdTemplateRemoveDialog());
     }

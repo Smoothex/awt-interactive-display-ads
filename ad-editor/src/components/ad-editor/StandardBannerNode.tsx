@@ -1,24 +1,48 @@
 import Ad from "../../ads/Ad.interface";
+
 import {Rnd} from "react-rnd";
+
 import {
   Box,
   Typography
 } from "@mui/material";
-import React from "react";
+
 import {useDispatch} from "react-redux";
+
 import {
   updateAdPosition,
   updateAdSize
 } from "../../features/ad/adSlice";
 
+import {MouseEventHandler} from "react";
+
 interface StandardBannerNodeProps {
   ad: Ad;
+  onClick: MouseEventHandler<HTMLDivElement>;
+  onMouseDown: MouseEventHandler<HTMLDivElement>;
+  selected: boolean;
 }
 
 function StandardBannerNode(props: StandardBannerNodeProps) {
   const {
-    ad
+    ad,
+    onClick,
+    onMouseDown,
+    selected = false,
   }: StandardBannerNodeProps = props;
+
+  const style = {
+    backgroundColor: "white",
+    border: "1px solid lightgray"
+  };
+
+  const styleSelected = {
+    backgroundColor: "white",
+    border: "4px solid #74b9ff",
+    outline: "#0984e3 solid 1px",
+    outlineOffset: "-2px",
+    opacity: 0.5,
+  };
 
   const dispatch = useDispatch();
 
@@ -47,21 +71,23 @@ function StandardBannerNode(props: StandardBannerNodeProps) {
             bottomLeft: true,
             topLeft: true
           }}
-          style={{
-            backgroundColor: "white",
-            border: "1px solid lightgray"
-          }}
+          style={selected ? styleSelected : style}
+          className={"standard-banner-" + ad.key}
           bounds="parent"
       >
-        <Box style={{
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          userSelect: "none",
-          color: "gray",
-        }}>
+        <Box
+            style={{
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              userSelect: "none",
+              color: "gray",
+            }}
+            onClick={onClick}
+            onMouseDown={onMouseDown}
+        >
           <Typography variant="subtitle1" gutterBottom>
             Standard Banner
           </Typography>

@@ -1,12 +1,22 @@
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {
+  createSlice,
+  PayloadAction
+} from "@reduxjs/toolkit";
+
 import Ad from "../../ads/Ad.interface";
 
+import Container from "../../ads/Container.interface";
+
 interface AdsState {
-  diagramStarter: Ad | null,
+  diagramStarter: Ad | null;
+  diagramContainers: Container[];
+  diagramSelectedNode: Ad | Container | null;
 }
 
 const initialState: AdsState = {
-  diagramStarter: null
+  diagramStarter: null,
+  diagramContainers: [],
+  diagramSelectedNode: null,
 }
 
 const diagramSlice = createSlice({
@@ -14,13 +24,25 @@ const diagramSlice = createSlice({
   initialState,
   reducers: {
     setDiagramStarter: (state, action: PayloadAction<{ diagramStarter: Ad | null }>) => {
-      state.diagramStarter = action.payload.diagramStarter;
+      if (action.payload.diagramStarter === null) {
+        state.diagramStarter = null;
+        state.diagramContainers = [];
+        state.diagramSelectedNode = null;
+      } else {
+        state.diagramStarter = action.payload.diagramStarter;
+        state.diagramContainers = action.payload.diagramStarter.props.children;
+        state.diagramSelectedNode = null;
+      }
+    },
+    setDiagramSelectedNode: (state, action: PayloadAction<{ selectedNode: Ad | Container | null }>) => {
+      state.diagramSelectedNode = action.payload.selectedNode;
     },
   }
 });
 
 export const {
-  setDiagramStarter
+  setDiagramStarter,
+  setDiagramSelectedNode
 } = diagramSlice.actions;
 
 export default diagramSlice.reducer;

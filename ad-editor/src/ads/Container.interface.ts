@@ -11,11 +11,9 @@ export enum ContainerType {
 }
 
 export interface ContainerProps {
-    width: string;
-    height: string;
-    top?: number;
-    right?: number;
-    bottom?: number;
-    left?: number;
+    width: number;
+    height: number;
+    top: number;
+    left: number;
     backgroundColor?: string;
 }

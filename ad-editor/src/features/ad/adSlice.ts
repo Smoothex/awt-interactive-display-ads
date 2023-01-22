@@ -13,7 +13,7 @@ import {
   v4 as uuidv4
 } from 'uuid';
 
-import {
+import Container, {
   ContainerProps,
   ContainerType
 } from "../../ads/Container.interface";
@@ -85,6 +85,7 @@ const adSlice = createSlice({
       adInstance.key = strNewKey;
       adInstance.name = strNewName;
       adInstance.isTemplate = false;
+      adInstance.props.children.forEach((current: Container) => current.key = uuidv4());
       state.ads.push(adInstance);
       state.ads = state.ads.sort(function (a, b) {
         let x = a.name.toLowerCase();

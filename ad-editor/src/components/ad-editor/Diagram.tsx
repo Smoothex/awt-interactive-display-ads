@@ -65,7 +65,7 @@ const Diagram = () => {
           {diagramStarter && diagramStarter.type === AdType.StandardBanner &&
               <StandardBannerNode
                   key={diagramStarter.key}
-                  ad={diagramStarter}
+                  adKey={diagramStarter.key}
                   onClick={(event) => {
                     dispatch(setDiagramSelectedNode({selectedNode: diagramStarter}));
                     event.stopPropagation();
@@ -79,7 +79,7 @@ const Diagram = () => {
           {diagramStarter && diagramStarter.type === AdType.LBanner &&
               <LBannerNode
                   key={diagramStarter.key}
-                  ad={diagramStarter}
+                  adKey={diagramStarter.key}
                   onClick={(event) => {
                     dispatch(setDiagramSelectedNode({selectedNode: diagramStarter}));
                     event.stopPropagation();
@@ -94,7 +94,7 @@ const Diagram = () => {
               diagramContainers.map((container) =>
                   <ContainerNode
                       key={container.key}
-                      container={container}
+                      containerKey={container.key}
                       parentKey={diagramStarter.key}
                       nodeBounds={diagramStarter.type === AdType.StandardBanner
                           ? ".standard-banner-" + diagramStarter.key

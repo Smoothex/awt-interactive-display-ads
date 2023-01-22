@@ -7,17 +7,22 @@ import {
   Typography
 } from "@mui/material";
 
-import React, {MouseEventHandler} from "react";
+import {MouseEventHandler} from "react";
 
-import {useDispatch} from "react-redux";
+import {
+  useDispatch,
+  useSelector
+} from "react-redux";
 
 import {
   updateAdPosition,
   updateAdSize
 } from "../../features/ad/adSlice";
 
+import {RootState} from "../../app/store";
+
 interface LBannerNodeProps {
-  ad: Ad;
+  adKey: string,
   onClick: MouseEventHandler<HTMLDivElement>;
   onMouseDown: MouseEventHandler<HTMLDivElement>;
   selected: boolean;
@@ -25,25 +30,27 @@ interface LBannerNodeProps {
 
 function LBannerNode(props: LBannerNodeProps) {
   const {
-    ad,
+    adKey,
     onClick,
     onMouseDown,
     selected = false,
   }: LBannerNodeProps = props;
 
+  const {ads} = useSelector((store: RootState) => store.ad);
+  const ad = ads.find(current => current.key === adKey) as Ad;
+
   const dispatch = useDispatch();
 
   const style = {
-    backgroundColor: "white",
+    backgroundColor: "#ecf0f1",
     border: "1px solid lightgray"
   };
 
   const styleSelected = {
-    backgroundColor: "white",
+    backgroundColor: "#ecf0f1",
     border: "4px solid #74b9ff",
     outline: "#0984e3 solid 1px",
     outlineOffset: "-2px",
-    opacity: 0.5,
   };
 
   return (
@@ -65,6 +72,10 @@ function LBannerNode(props: LBannerNodeProps) {
               bottomRight: false,
               bottomLeft: false,
               topLeft: false
+            }}
+            style={{
+              backgroundColor: ad.props.backgroundColor ? ad.props.backgroundColor : "#ffffff",
+              border: "1px solid lightgray"
             }}
             className={"l-banner-" + ad.key}
             bounds="parent"
@@ -105,7 +116,6 @@ function LBannerNode(props: LBannerNodeProps) {
                 justifyContent: "center",
                 alignItems: "center",
                 userSelect: "none",
-                color: "gray",
               }}
               onClick={onClick}
               onMouseDown={onMouseDown}

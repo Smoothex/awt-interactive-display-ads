@@ -7,7 +7,7 @@ import {
   Typography
 } from "@mui/material";
 
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 
 import {
   updateAdPosition,
@@ -16,8 +16,12 @@ import {
 
 import {MouseEventHandler} from "react";
 
+import {RootState} from "../../app/store";
+
+import {pickContrastColor} from "../../util";
+
 interface StandardBannerNodeProps {
-  ad: Ad;
+  adKey: string,
   onClick: MouseEventHandler<HTMLDivElement>;
   onMouseDown: MouseEventHandler<HTMLDivElement>;
   selected: boolean;
@@ -25,23 +29,27 @@ interface StandardBannerNodeProps {
 
 function StandardBannerNode(props: StandardBannerNodeProps) {
   const {
-    ad,
+    adKey,
     onClick,
     onMouseDown,
     selected = false,
   }: StandardBannerNodeProps = props;
 
+  const {ads} = useSelector((store: RootState) => store.ad);
+  const ad = ads.find(current => current.key === adKey) as Ad;
+
   const style = {
-    backgroundColor: "white",
+    backgroundColor: ad.props.backgroundColor,
+    color: pickContrastColor(ad.props.backgroundColor as string, "#ffffff", "#000000"),
     border: "1px solid lightgray"
   };
 
   const styleSelected = {
-    backgroundColor: "white",
+    backgroundColor: ad.props.backgroundColor,
+    color: pickContrastColor(ad.props.backgroundColor as string, "#ffffff", "#000000"),
     border: "4px solid #74b9ff",
     outline: "#0984e3 solid 1px",
     outlineOffset: "-2px",
-    opacity: 0.5,
   };
 
   const dispatch = useDispatch();
@@ -83,7 +91,6 @@ function StandardBannerNode(props: StandardBannerNodeProps) {
               justifyContent: "center",
               alignItems: "center",
               userSelect: "none",
-              color: "gray",
             }}
             onClick={onClick}
             onMouseDown={onMouseDown}

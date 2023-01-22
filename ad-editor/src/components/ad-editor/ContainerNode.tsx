@@ -1,19 +1,36 @@
-import Container, {ContainerType} from "../../ads/Container.interface";
+import {ContainerType} from "../../ads/Container.interface";
 
 import {Rnd} from "react-rnd";
 
-import {removeContainer, updateContainerPosition, updateContainerSize} from "../../features/ad/adSlice";
+import {
+  removeContainer,
+  updateContainerPosition,
+  updateContainerSize
+} from "../../features/ad/adSlice";
 
-import {Box, IconButton, Typography} from "@mui/material";
+import {
+  Box,
+  IconButton,
+  Typography
+} from "@mui/material";
 
 import CloseIcon from '@mui/icons-material/Close';
 
-import {useDispatch} from "react-redux";
+import {
+  useDispatch,
+  useSelector
+} from "react-redux";
 
 import {MouseEventHandler} from "react";
 
+import {pickContrastColor} from "../../util";
+
+import {RootState} from "../../app/store";
+
+import Ad from "../../ads/Ad.interface";
+
 interface ContainerNodeProps {
-  container: Container;
+  containerKey: string;
   parentKey: string;
   nodeBounds?: string;
   onClick: MouseEventHandler<HTMLDivElement>;
@@ -23,7 +40,7 @@ interface ContainerNodeProps {
 
 export function ContainerNode(props: ContainerNodeProps) {
   const {
-    container,
+    containerKey,
     parentKey,
     nodeBounds = "parent",
     onClick,
@@ -31,24 +48,34 @@ export function ContainerNode(props: ContainerNodeProps) {
     selected = false,
   }: ContainerNodeProps = props;
 
+  const {ads} = useSelector((store: RootState) => store.ad);
+  const ad = ads.find(current => current.key === parentKey) as Ad;
+  const container = ad.props.children.find(current => current.key === containerKey);
+
   const dispatch = useDispatch();
 
   const handleRemove = () => {
-    dispatch(removeContainer({parentAdKey: parentKey, containerKey: container.key}));
+    dispatch(removeContainer({parentAdKey: parentKey, containerKey: containerKey}));
   }
 
+  const backgroundColor = container && container.props.backgroundColor ? container.props.backgroundColor : "#ffffff";
+
   const style = {
-    backgroundColor: "white",
+    backgroundColor: backgroundColor,
+    color: pickContrastColor(backgroundColor, "#ffffff", "#000000"),
     border: "1px solid lightgray"
   };
 
   const styleSelected = {
-    backgroundColor: "white",
+    backgroundColor: backgroundColor,
+    color: pickContrastColor(backgroundColor, "#ffffff", "#000000"),
     border: "4px solid #74b9ff",
     outline: "#0984e3 solid 1px",
     outlineOffset: "-2px",
-    opacity: 0.5,
   };
+
+  if (container === undefined)
+    return <></>
 
   return (
       <Rnd
@@ -103,31 +130,67 @@ export function ContainerNode(props: ContainerNodeProps) {
         >
           <CloseIcon fontSize="small"/>
         </IconButton>
-        <Box
-            style={{
-              width: "100%",
-              height: "100%",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              userSelect: "none",
-              color: "gray",
-            }}
-            onClick={onClick}
-            onMouseDown={onMouseDown}
-        >
-          <Typography variant="subtitle1" gutterBottom>
-            {container.type === ContainerType.Text &&
-                "Text"
-            }
-            {container.type === ContainerType.Image &&
-                "Image"
-            }
-            {container.type === ContainerType.Slideshow &&
-                "Slideshow"
-            }
-          </Typography>
-        </Box>
+        {container.type === ContainerType.Text &&
+            <Box
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  userSelect: "none",
+                }}
+                onClick={onClick}
+                onMouseDown={onMouseDown}
+            >
+              {"text" in container.props
+                  ?
+                  <Typography variant="subtitle1" gutterBottom>
+                    container.props.text
+                  </Typography>
+                  :
+                  <Typography variant="subtitle1" gutterBottom>
+                    Text
+                  </Typography>
+              }
+            </Box>
+        }
+        {container.type === ContainerType.Image &&
+            <Box
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  userSelect: "none",
+                }}
+                onClick={onClick}
+                onMouseDown={onMouseDown}
+            >
+              <Typography variant="subtitle1" gutterBottom>
+                Image
+              </Typography>
+            </Box>
+        }
+        {container.type === ContainerType.Slideshow &&
+            <Box
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  userSelect: "none",
+                }}
+                onClick={onClick}
+                onMouseDown={onMouseDown}
+            >
+              <Typography variant="subtitle1" gutterBottom>
+                Slideshow
+              </Typography>
+            </Box>
+        }
       </Rnd>
   );
 }

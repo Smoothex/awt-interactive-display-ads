@@ -47,6 +47,7 @@ const adSlice = createSlice({
         height: type === AdType.StandardBanner ? 120 : 360,
         top: type === AdType.StandardBanner ? 540 : 0,
         left: type === AdType.StandardBanner ? 320 : 640,
+        backgroundColor: "#ffffff",
         children: [],
       };
       const ad = {
@@ -135,6 +136,14 @@ const adSlice = createSlice({
       ad.props.top = action.payload.top;
       ad.props.left = action.payload.left;
     },
+    updateAdBackgroundColor: (state, action: PayloadAction<{ key: string, backgroundColor: string }>) => {
+      const strAdKey: string = action.payload.key;
+      const ad = state.ads.find((ad) => ad.key === strAdKey);
+      if (ad === undefined) {
+        return;
+      }
+      ad.props.backgroundColor = action.payload.backgroundColor;
+    },
     createContainer: (state, action: PayloadAction<{ parentAdKey: string, containerType: ContainerType }>) => {
       //-- Create the new container
       const key: string = uuidv4();
@@ -144,6 +153,7 @@ const adSlice = createSlice({
         height: 100,
         top: 0,
         left: 0,
+        backgroundColor: "#ffffff"
       }
       const container = {
         key: key,
@@ -210,7 +220,21 @@ const adSlice = createSlice({
       }
       container.props.top = action.payload.top;
       container.props.left = action.payload.left;
-    }
+    },
+    updateContainerBackgroundColor: (state, action: PayloadAction<{ parentAdKey: string, containerKey: string, backgroundColor: string}>) => {
+      //-- Get the parent ad
+      const parentAd = state.ads.find((ad) => ad.key === action.payload.parentAdKey);
+      if (parentAd === undefined) {
+        return;
+      }
+      //-- Get the container from the ad
+      const strContainerKey: string = action.payload.containerKey;
+      const container = parentAd.props.children.find(cont => cont.key === strContainerKey);
+      if (container === undefined) {
+        return;
+      }
+      container.props.backgroundColor = action.payload.backgroundColor;
+    },
   }
 });
 
@@ -221,10 +245,12 @@ export const {
   downloadAdAsJson,
   updateAdSize,
   updateAdPosition,
+  updateAdBackgroundColor,
   createContainer,
   removeContainer,
   updateContainerSize,
   updateContainerPosition,
+  updateContainerBackgroundColor,
 } = adSlice.actions;
 
 export default adSlice.reducer;

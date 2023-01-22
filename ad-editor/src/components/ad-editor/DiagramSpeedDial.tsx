@@ -4,11 +4,11 @@ import SpeedDialIcon from '@mui/material/SpeedDialIcon';
 
 import SpeedDialAction from '@mui/material/SpeedDialAction';
 
-import ArticleIcon from '@mui/icons-material/Article';
-
-import ImageIcon from '@mui/icons-material/Image';
-
-import SlideshowIcon from '@mui/icons-material/Slideshow';
+import {
+  ArticleOutlined,
+  ImageOutlined,
+  Slideshow
+} from "@mui/icons-material";
 
 import {
   useDispatch,
@@ -39,19 +39,19 @@ export default function DiagramSpeedDial() {
       >
         <SpeedDialAction
             key="TextContainerNew"
-            icon=<ArticleIcon/>
+            icon=<ArticleOutlined/>
             tooltipTitle="New text container"
             onClick={() => handleCreateContainer(ContainerType.Text)}
         />
         <SpeedDialAction
             key="ImageContainerNew"
-            icon=<ImageIcon/>
+            icon=<ImageOutlined/>
             tooltipTitle="New image container"
             onClick={() => handleCreateContainer(ContainerType.Image)}
         />
         <SpeedDialAction
             key="SlideshowContainerNew"
-            icon=<SlideshowIcon/>
+            icon=<Slideshow/>
             tooltipTitle="New slideshow container"
             onClick={() => handleCreateContainer(ContainerType.Slideshow)}
         />

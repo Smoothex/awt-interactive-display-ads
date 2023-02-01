@@ -4,16 +4,16 @@ import {
   List,
 } from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../app/store";
+import {RootState, store} from "../../app/store";
 import AdTemplateListSubheader from "./AdTemplateListSubheader";
 import AdTemplateListItem from "./AdTemplateListItem";
 import Ad from "../../ads/Ad.interface";
 import {setDiagramStarter} from "../../features/diagram/diagramSlice";
+import {selectAllAds} from "../../features/ad/adSlice";
 
 const AdTemplateList = () => {
-  const {ads} = useSelector((store: RootState) => store.ad);
-  const {lastCreatedAdKey} = useSelector((store: RootState) => store.ad);
-  const {lastRemovedAdKey} = useSelector((store: RootState) => store.ad);
+  const adIds = useSelector((store: RootState) => store.ad.ads.ids);
+  const [ads, setAds] = useState<Ad[]>([]);
   const {diagramStarter} = useSelector((store: RootState) => store.diagram);
   const [selectedAdTemplate, _setSelectedAdTemplate] = useState<Ad | null>(null);
   const dispatch = useDispatch();
@@ -32,20 +32,10 @@ const AdTemplateList = () => {
     }
   };
 
-  //-- Listen for changes on lastCreatedAdKey and update the selection on change
   useEffect(() => {
-    let lastCreatedAd: Ad | undefined = ads.find((ad) => ad.key === lastCreatedAdKey);
-    if (lastCreatedAd !== undefined) {
-      setSelectedAdTemplate(lastCreatedAd);
-    }
-  }, [lastCreatedAdKey]);
-
-  //-- Listen for changes on lastRemovedAdKey and update the selection on change
-  useEffect(() => {
-    if (selectedAdTemplate !== null && selectedAdTemplate.key === lastRemovedAdKey) {
-      setSelectedAdTemplate(null);
-    }
-  }, [lastRemovedAdKey]);
+    const ads = selectAllAds(store.getState().ad.ads);
+    setAds(ads);
+  }, [adIds]);
 
   return (
       <List

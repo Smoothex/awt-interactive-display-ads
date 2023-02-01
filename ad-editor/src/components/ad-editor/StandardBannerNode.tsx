@@ -7,16 +7,16 @@ import {
   Typography
 } from "@mui/material";
 
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 
 import {
-  updateAdPosition,
-  updateAdSize
+  selectAdById,
+  updateAd,
 } from "../../features/ad/adSlice";
 
 import {MouseEventHandler} from "react";
 
-import {RootState} from "../../app/store";
+import {store} from "../../app/store";
 
 import {pickContrastColor} from "../../util";
 
@@ -35,8 +35,11 @@ function StandardBannerNode(props: StandardBannerNodeProps) {
     selected = false,
   }: StandardBannerNodeProps = props;
 
-  const {ads} = useSelector((store: RootState) => store.ad);
-  const ad = ads.find(current => current.key === adKey) as Ad;
+  const ad: Ad | undefined = selectAdById(store.getState().ad.ads, adKey);
+
+  const dispatch = useDispatch();
+
+  if (ad === undefined) return <></>
 
   const style = {
     backgroundColor: ad.props.backgroundColor,
@@ -52,8 +55,6 @@ function StandardBannerNode(props: StandardBannerNodeProps) {
     outlineOffset: "-2px",
   };
 
-  const dispatch = useDispatch();
-
   return (
       <Rnd
           default={{
@@ -63,11 +64,29 @@ function StandardBannerNode(props: StandardBannerNodeProps) {
             height: ad.props.height,
           }}
           onDragStop={(e, d) => {
-            dispatch(updateAdPosition({key: ad.key, top: d.y, left: d.x}));
+            dispatch(updateAd({
+              id: ad.key,
+              changes: {
+                props: {
+                  ...ad.props,
+                  top: d.y,
+                  left: d.x,
+                }
+              }
+            }));
           }}
           onResize={(e, direction, ref, delta, position) => {
-            dispatch(updateAdSize({key: ad.key, width: ref.offsetWidth, height: ref.offsetHeight}));
-            dispatch(updateAdPosition({key: ad.key, top: position.y, left: position.x}));
+            dispatch(updateAd({
+              id: ad.key,
+              changes: {
+                props: {
+                  ...ad.props,
+                  width: ref.offsetWidth,
+                  height: ref.offsetHeight,
+                  top: position.y,
+                  left: position.x
+                }}
+            }));
           }}
           enableResizing={{
             top: true,

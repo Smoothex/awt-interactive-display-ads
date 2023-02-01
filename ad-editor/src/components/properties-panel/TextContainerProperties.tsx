@@ -5,33 +5,24 @@ import {
 
 import {RootState} from "../../app/store";
 
-import Ad from "../../ads/Ad.interface";
-
-import TextContainer from "../../ads/TextContainer.interface";
+import Container from "../../ads/Container.interface";
 
 import {PropertiesPanelHeader} from "./PropertiesPanelHeader";
 
 import {ArticleOutlined} from "@mui/icons-material";
 
-import {
-  Box,
-} from "@mui/material";
+import {Box} from "@mui/material";
 
 import SimpleTextField from "./SimpleTextField";
 
 import ColorPickerButton from "./ColorPickerButton";
 
-import {updateContainerBackgroundColor} from "../../features/ad/adSlice";
+import {updateContainer} from "../../features/ad/adSlice";
 
 export const TextContainerProperties = () => {
-  const {ads} = useSelector((store: RootState) => store.ad);
-  const {
-    diagramStarter,
-    diagramSelectedNode
-  } = useSelector((store: RootState) => store.diagram);
-  const currentAd = ads.find(ad => ad.key === diagramStarter!.key) as Ad;
-  const currentContainer = currentAd.props.children.find(current => current.key === diagramSelectedNode!.key) as TextContainer;
-
+  const {containers} = useSelector((store: RootState) => store.ad);
+  const {diagramSelectedNode} = useSelector((store: RootState) => store.diagram);
+  const currentContainer = containers.entities[diagramSelectedNode!.key] as Container;
   const dispatch = useDispatch();
 
   return (
@@ -46,11 +37,17 @@ export const TextContainerProperties = () => {
               objectKey={currentContainer.key}
               label="Background Color"
               getCurrentColor={() => currentContainer.props.backgroundColor as string}
-              setCurrentColor={(color) => dispatch(updateContainerBackgroundColor({
-                parentAdKey: currentAd.key,
-                containerKey: currentContainer.key,
-                backgroundColor: color
-              }))}
+              setCurrentColor={(color) => {
+                dispatch(updateContainer({
+                  id: currentContainer.key,
+                  changes: {
+                    props: {
+                      ...currentContainer.props,
+                      backgroundColor: color,
+                    }
+                  }
+                }))
+              }}
           />
         </Box>
       </>

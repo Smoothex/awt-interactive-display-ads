@@ -5,27 +5,23 @@ import {
 
 import {RootState} from "../../app/store";
 
-import Ad from "../../ads/Ad.interface";
-
 import {PropertiesPanelHeader} from "./PropertiesPanelHeader";
 
 import {CallToActionOutlined} from "@mui/icons-material";
 
-import {
-  Box,
-} from "@mui/material";
+import {Box} from "@mui/material";
 
 import SimpleTextField from "./SimpleTextField";
 
 import ColorPickerButton from "./ColorPickerButton";
 
-import {updateAdBackgroundColor} from "../../features/ad/adSlice";
+import {updateAd} from "../../features/ad/adSlice";
+import Ad from "../../ads/Ad.interface";
 
 export const StandardBannerProperties = () => {
   const {ads} = useSelector((store: RootState) => store.ad);
   const {diagramStarter} = useSelector((store: RootState) => store.diagram);
-  const currentAd = ads.find(ad => ad.key === diagramStarter!.key) as Ad;
-
+  const currentAd = ads.entities[diagramStarter!.key] as Ad;
   const dispatch = useDispatch();
 
   return (
@@ -40,9 +36,14 @@ export const StandardBannerProperties = () => {
               objectKey={currentAd.key}
               label="Background Color"
               getCurrentColor={() => currentAd.props.backgroundColor as string}
-              setCurrentColor={(color) => dispatch(updateAdBackgroundColor({
-                key: currentAd.key,
-                backgroundColor: color
+              setCurrentColor={(color) => dispatch(updateAd({
+                id: currentAd.key,
+                changes: {
+                  props: {
+                    ...currentAd.props,
+                    backgroundColor: color
+                  }
+                }
               }))}
           />
         </Box>

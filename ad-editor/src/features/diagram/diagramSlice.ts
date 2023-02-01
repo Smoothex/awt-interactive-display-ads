@@ -9,13 +9,11 @@ import Container from "../../ads/Container.interface";
 
 interface AdsState {
   diagramStarter: Ad | null;
-  diagramContainers: Container[];
   diagramSelectedNode: Ad | Container | null;
 }
 
 const initialState: AdsState = {
   diagramStarter: null,
-  diagramContainers: [],
   diagramSelectedNode: null,
 }
 
@@ -26,11 +24,9 @@ const diagramSlice = createSlice({
     setDiagramStarter: (state, action: PayloadAction<{ diagramStarter: Ad | null }>) => {
       if (action.payload.diagramStarter === null) {
         state.diagramStarter = null;
-        state.diagramContainers = [];
         state.diagramSelectedNode = null;
       } else {
         state.diagramStarter = action.payload.diagramStarter;
-        state.diagramContainers = action.payload.diagramStarter.props.children;
         state.diagramSelectedNode = null;
       }
     },

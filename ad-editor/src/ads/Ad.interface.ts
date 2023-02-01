@@ -1,5 +1,3 @@
-import Container from "./Container.interface";
-
 export default interface Ad {
     key: string;
     name: string;
@@ -19,5 +17,4 @@ export interface AdProps {
     top: number;
     left: number;
     backgroundColor?: string;
-    children: Container[];
 }

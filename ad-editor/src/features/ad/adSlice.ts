@@ -1,37 +1,44 @@
 import {
   createSlice,
-  PayloadAction
+  createEntityAdapter,
+  PayloadAction,
+  EntityState,
+  Update
 } from "@reduxjs/toolkit";
 
-import Ad,
-{
-  AdProps,
-  AdType
-} from "../../ads/Ad.interface";
+import Ad, {AdType} from "../../ads/Ad.interface";
 
 import {
   v4 as uuidv4
 } from 'uuid';
 
-import Container, {
-  ContainerProps,
-  ContainerType
-} from "../../ads/Container.interface";
+import Container, {ContainerType} from "../../ads/Container.interface";
+
+import AdContainer from "../../ads/AdContainer.interface";
+
+const adsAdapter = createEntityAdapter<Ad>({
+  selectId: (ad: Ad) => ad.key,
+  sortComparer: (a: Ad, b: Ad) => a.name.localeCompare(b.name),
+});
+
+const containersAdapter = createEntityAdapter<Container>({
+  selectId: (container: Container) => container.key,
+});
+
+const adContainerAdapter = createEntityAdapter<AdContainer>({
+  selectId: (adContainer: AdContainer) => adContainer.key,
+});
 
 interface AdsState {
-  ads: Ad[],
-  lastCreatedAdKey: string,
-  lastRemovedAdKey: string,
-  lastCreatedContainerKey: string,
-  lastRemovedContainerKey: string,
+  ads: EntityState<Ad>,
+  containers: EntityState<Container>,
+  adContainerTuples: EntityState<AdContainer>,
 }
 
 const initialState: AdsState = {
-  ads: [],
-  lastCreatedAdKey: "",
-  lastRemovedAdKey: "",
-  lastCreatedContainerKey: "",
-  lastRemovedContainerKey: "",
+  ads: adsAdapter.getInitialState(),
+  containers: containersAdapter.getInitialState(),
+  adContainerTuples: adContainerAdapter.getInitialState(),
 }
 
 const adSlice = createSlice({
@@ -39,219 +46,216 @@ const adSlice = createSlice({
   initialState,
   reducers: {
     createAdTemplate: (state, action: PayloadAction<{ name: string, type: AdType }>) => {
-      const key: string = uuidv4();
-      const name: string = action.payload.name;
-      const type: AdType = action.payload.type;
-      const props: AdProps = {
-        width: 640,
-        height: type === AdType.StandardBanner ? 120 : 360,
-        top: type === AdType.StandardBanner ? 540 : 0,
-        left: type === AdType.StandardBanner ? 320 : 640,
-        backgroundColor: "#ffffff",
-        children: [],
-      };
       const ad = {
-        key: key,
-        name: name,
-        type: type,
-        props: props,
+        key: uuidv4(),
+        name: action.payload.name,
+        type: action.payload.type,
+        props: action.payload.type === AdType.StandardBanner
+            ? {
+              width: 640,
+              height: 120,
+              top: 540,
+              left: 320,
+              backgroundColor: "#ffffff",
+            }
+            : {
+              width: 640,
+              height: 360,
+              top: 0,
+              left: 640,
+              backgroundColor: "#ffffff",
+            },
         isTemplate: true
       }
-      state.ads.push(ad);
-      state.ads = state.ads.sort(function (a, b) {
-        let x = a.name.toLowerCase();
-        let y = b.name.toLowerCase();
-        if (x < y) {
-          return -1;
-        }
-        if (x > y) {
-          return 1;
-        }
-        return 0;
-      });
-      state.lastCreatedAdKey = ad.key;
+      adsAdapter.addOne(state.ads, ad);
     },
-    createAdInstance: (state, action: PayloadAction<{ name: string, adTemplateKey: string }>) => {
-      const adTemplateKey = action.payload.adTemplateKey;
-      const adTemplate = state.ads.find((ad) => ad.key === adTemplateKey);
-      if (adTemplate === undefined) {
-        return;
-      }
-      const strNewKey: string = uuidv4();
-      const strNewName: string = action.payload.name;
 
-      //-- Create a deep clone of the ad template
+    createAdInstance: (state, action: PayloadAction<{ name: string, adTemplateKey: string }>) => {
+      //-- Get the ad template
+      const adTemplate: Ad | undefined = state.ads.entities[action.payload.adTemplateKey];
+      if (adTemplate === undefined) return;
+
+      //-- Create a copy of the ad template and add it to the list with ads
       const adInstance = JSON.parse(JSON.stringify(adTemplate));
-      adInstance.key = strNewKey;
-      adInstance.name = strNewName;
+      adInstance.key = uuidv4();
+      adInstance.name = action.payload.name;
       adInstance.isTemplate = false;
-      adInstance.props.children.forEach((current: Container) => current.key = uuidv4());
-      state.ads.push(adInstance);
-      state.ads = state.ads.sort(function (a, b) {
-        let x = a.name.toLowerCase();
-        let y = b.name.toLowerCase();
-        if (x < y) {
-          return -1;
-        }
-        if (x > y) {
-          return 1;
-        }
-        return 0;
-      });
-      state.lastCreatedAdKey = adInstance.key;
-    },
-    removeAd: (state, action: PayloadAction<{ key: string }>) => {
-      const adKey: string = action.payload.key;
-      state.ads = state.ads.filter((ad) => ad.key !== adKey)
-      state.lastRemovedAdKey = adKey;
-    },
-    downloadAdAsJson: (state, action: PayloadAction<{ key: string }>) => {
-      const strAdKey: string = action.payload.key;
-      const ad = state.ads.find((ad) => ad.key === strAdKey);
-      if (ad === undefined) {
-        return;
+      adsAdapter.addOne(state.ads, adInstance);
+
+      //-- Create a copy of each child and add it to the list with containers
+      for (let key in state.adContainerTuples.entities) {
+        let adContainerTuple = state.adContainerTuples.entities[key];
+        if (adContainerTuple === undefined) continue;
+        if (adContainerTuple.adKey !== adTemplate.key) continue;
+
+        //-- The adContainerTuple contains a child of adTemplate
+        const childContainer = state.containers.entities[adContainerTuple.containerKey];
+        if (childContainer === undefined) continue;
+
+        //-- Copy the child container and add it to the list with containers
+        const copiedContainer = JSON.parse(JSON.stringify(childContainer));
+        copiedContainer.key = uuidv4();
+        containersAdapter.addOne(state.containers, copiedContainer);
+
+        //-- Create the relation between the ad instance and the copied container
+        adContainerAdapter.addOne(state.adContainerTuples, {
+          key: uuidv4(),
+          adKey: adInstance.key,
+          containerKey: copiedContainer.key
+        });
       }
-      let strData = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(ad, null, 2));
+    },
+
+    removeAd: (state, action: PayloadAction<{ key: string }>) => {
+      //-- Get the ids of all containers and all relation, which should also be removed
+      const containerIds = [];
+      const tupleIds = [];
+      for (let key in state.adContainerTuples.entities) {
+        let adContainerTuple = state.adContainerTuples.entities[key];
+        if (adContainerTuple === undefined) continue;
+        if (adContainerTuple.adKey !== action.payload.key) continue;
+
+        //-- The adContainerTuple contains a child of the ad, which should be removed
+        containerIds.push(adContainerTuple.containerKey);
+        tupleIds.push(adContainerTuple.key);
+      }
+
+      //-- Remove the relations, containers and the ad
+      adContainerAdapter.removeMany(state.adContainerTuples, tupleIds);
+      containersAdapter.removeMany(state.containers, containerIds);
+      adsAdapter.removeOne(state.ads, action.payload.key);
+    },
+
+    downloadAdAsJson: (state, action: PayloadAction<{ key: string }>) => {
+      //-- Get the ad
+      const ad = state.ads.entities[action.payload.key];
+      if (ad === undefined) return;
+
+      //-- Get the containers
+      const containerIds = [];
+      for (let key in state.adContainerTuples.entities) {
+        let adContainerTuple = state.adContainerTuples.entities[key];
+        if (adContainerTuple === undefined) continue;
+        if (adContainerTuple.adKey !== action.payload.key) continue;
+
+        //-- The adContainerTuple contains a child of the ad, which should be removed
+        containerIds.push(adContainerTuple.containerKey);
+      }
+
+      //-- Create a copy of the ad
+      const adCopy = JSON.parse(JSON.stringify(ad));
+
+      //-- Create copies of the children and add them as children of the ad copy
+      adCopy.props.children = containerIds
+          .map(containerId => state.containers.entities[containerId])
+          .filter(container => container !== undefined)
+          .map(container => JSON.parse(JSON.stringify(container)));
+
+      let strData = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(adCopy, null, 2));
       let xDownloadAnchor = document.createElement('a');
       xDownloadAnchor.setAttribute("href", strData);
-      xDownloadAnchor.setAttribute("download", ad.name + ".json");
+      xDownloadAnchor.setAttribute("download", adCopy.name + ".json");
       document.body.appendChild(xDownloadAnchor); // required for firefox
       xDownloadAnchor.click();
       xDownloadAnchor.remove();
     },
-    updateAdSize: (state, action: PayloadAction<{ key: string, width: number, height: number }>) => {
-      const strAdKey: string = action.payload.key;
-      const ad = state.ads.find((ad) => ad.key === strAdKey);
-      if (ad === undefined) {
-        return;
-      }
-      ad.props.width = action.payload.width;
-      ad.props.height = action.payload.height;
+
+    updateAd: (state, action: PayloadAction<Update<Ad>>) => {
+      adsAdapter.updateOne(state.ads, action.payload);
     },
-    updateAdPosition: (state, action: PayloadAction<{ key: string, top: number, left: number }>) => {
-      const strAdKey: string = action.payload.key;
-      const ad = state.ads.find((ad) => ad.key === strAdKey);
-      if (ad === undefined) {
-        return;
-      }
-      ad.props.top = action.payload.top;
-      ad.props.left = action.payload.left;
-    },
-    updateAdBackgroundColor: (state, action: PayloadAction<{ key: string, backgroundColor: string }>) => {
-      const strAdKey: string = action.payload.key;
-      const ad = state.ads.find((ad) => ad.key === strAdKey);
-      if (ad === undefined) {
-        return;
-      }
-      ad.props.backgroundColor = action.payload.backgroundColor;
-    },
+
     createContainer: (state, action: PayloadAction<{ parentAdKey: string, containerType: ContainerType }>) => {
       //-- Create the new container
-      const key: string = uuidv4();
-      const type: ContainerType = action.payload.containerType;
-      const props: ContainerProps = {
-        width: 100,
-        height: 100,
-        top: 0,
-        left: 0,
-        backgroundColor: "#ffffff"
-      }
       const container = {
-        key: key,
-        type: type,
-        props: props
+        key: uuidv4(),
+        type: action.payload.containerType,
+        props: {
+          width: 100,
+          height: 100,
+          top: 0,
+          left: 0,
+          backgroundColor: "#ffffff"
+        }
       }
-      //-- Get the parent ad and ad the container inside it
-      const parentAdKey: string = action.payload.parentAdKey;
-      const parentAd = state.ads.find((ad) => ad.key === parentAdKey);
-      if (parentAd === undefined) {
-        return;
-      }
-      parentAd.props.children.push(container);
+
+      //-- Add the container to the state
+      containersAdapter.addOne(state.containers, container);
+
+      //-- Create the relation between the ad and the container
+      adContainerAdapter.addOne(state.adContainerTuples, {
+        key: uuidv4(),
+        adKey: action.payload.parentAdKey,
+        containerKey: container.key
+      });
+
+      //-- Get the parent ad
+      const parentAd = state.ads.entities[action.payload.parentAdKey];
+      if (parentAd === undefined) return;
 
       //-- Correct the properties for standard banners
-      if(parentAd.type === AdType.StandardBanner) {
+      if (parentAd.type === AdType.StandardBanner) {
         container.props.width = parentAd.props.width > 100 ? 100 : parentAd.props.width;
         container.props.top = parentAd.props.top;
         container.props.left = parentAd.props.left;
       }
+    },
 
-      //-- Fire an event that a new container was created
-      state.lastCreatedContainerKey = container.key;
-    },
     removeContainer: (state, action: PayloadAction<{ parentAdKey: string, containerKey: string }>) => {
-      //-- Get the parent ad and ad the container inside it
-      const parentAd = state.ads.find((ad) => ad.key === action.payload.parentAdKey);
-      if (parentAd === undefined) {
-        return;
+      //-- Get all tuples that contain the input container key
+      const tuples = [];
+      for (const key in state.adContainerTuples.entities) {
+        const adContainerTuple = state.adContainerTuples.entities[key];
+        if (adContainerTuple === undefined) continue;
+        if (adContainerTuple.containerKey !== action.payload.containerKey) continue;
+        tuples.push(adContainerTuple.key);
       }
-      const containerKey: string = action.payload.containerKey;
-      //-- Remove the container from it
-      parentAd.props.children = parentAd.props.children.filter(container => container.key !== containerKey);
-      //-- Fire an event that a new container was removed
-      state.lastRemovedContainerKey = containerKey;
+
+      //-- Remove the tuples that contain the input container key
+      adContainerAdapter.removeMany(state.adContainerTuples, tuples);
+
+      //-- Remove the container
+      containersAdapter.removeOne(state.containers, action.payload.containerKey);
     },
-    updateContainerSize: (state, action: PayloadAction<{ parentAdKey: string, containerKey: string, width: number, height: number }>) => {
-      //-- Get the parent ad
-      const parentAd = state.ads.find((ad) => ad.key === action.payload.parentAdKey);
-      if (parentAd === undefined) {
-        return;
-      }
-      //-- Get the container from the ad
-      const strContainerKey: string = action.payload.containerKey;
-      const container = parentAd.props.children.find(cont => cont.key === strContainerKey);
-      if (container === undefined) {
-        return;
-      }
-      //-- Update the size of the container
-      container.props.width = action.payload.width;
-      container.props.height = action.payload.height;
-    },
-    updateContainerPosition: (state, action: PayloadAction<{ parentAdKey: string, containerKey: string, top: number, left: number }>) => {
-      //-- Get the parent ad
-      const parentAd = state.ads.find((ad) => ad.key === action.payload.parentAdKey);
-      if (parentAd === undefined) {
-        return;
-      }
-      //-- Get the container from the ad
-      const strContainerKey: string = action.payload.containerKey;
-      const container = parentAd.props.children.find(cont => cont.key === strContainerKey);
-      if (container === undefined) {
-        return;
-      }
-      container.props.top = action.payload.top;
-      container.props.left = action.payload.left;
-    },
-    updateContainerBackgroundColor: (state, action: PayloadAction<{ parentAdKey: string, containerKey: string, backgroundColor: string}>) => {
-      //-- Get the parent ad
-      const parentAd = state.ads.find((ad) => ad.key === action.payload.parentAdKey);
-      if (parentAd === undefined) {
-        return;
-      }
-      //-- Get the container from the ad
-      const strContainerKey: string = action.payload.containerKey;
-      const container = parentAd.props.children.find(cont => cont.key === strContainerKey);
-      if (container === undefined) {
-        return;
-      }
-      container.props.backgroundColor = action.payload.backgroundColor;
+
+    updateContainer: (state, action: PayloadAction<Update<Container>>) => {
+      containersAdapter.updateOne(state.containers, action.payload);
     },
   }
 });
+
+export const {
+  selectById: selectAdById,
+  selectIds: selectAdIds,
+  selectEntities: selectAdEntities,
+  selectAll: selectAllAds,
+  selectTotal: selectTotalAds,
+} = adsAdapter.getSelectors();
+
+export const {
+  selectById: selectContainerById,
+  selectIds: selectContainerIds,
+  selectEntities: selectContainerEntities,
+  selectAll: selectAllContainers,
+  selectTotal: selectTotalContainers,
+} = containersAdapter.getSelectors();
+
+export const {
+  selectById: selectAdContainerTupleById,
+  selectIds: selectAdContainerTupleIds,
+  selectEntities: selectAdContainerTupleEntities,
+  selectAll: selectAllAdContainerTuples,
+  selectTotal: selectTotalAdContainerTuple,
+} = adContainerAdapter.getSelectors();
 
 export const {
   createAdTemplate,
   createAdInstance,
   removeAd,
   downloadAdAsJson,
-  updateAdSize,
-  updateAdPosition,
-  updateAdBackgroundColor,
+  updateAd,
   createContainer,
   removeContainer,
-  updateContainerSize,
-  updateContainerPosition,
-  updateContainerBackgroundColor,
+  updateContainer,
 } = adSlice.actions;
 
 export default adSlice.reducer;

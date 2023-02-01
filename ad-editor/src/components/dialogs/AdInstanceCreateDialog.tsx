@@ -9,14 +9,14 @@ import DialogTitle from '@mui/material/DialogTitle';
 import {AddToPhotos as AddIcon, Cancel as CancelIcon} from "@mui/icons-material";
 import {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../app/store";
-import {createAdInstance} from "../../features/ad/adSlice";
+import {RootState, store} from "../../app/store";
+import {createAdInstance, selectAllAds} from "../../features/ad/adSlice";
 import {closeAdInstanceCreateDialog} from "../../features/dialog/dialogSlice";
 import {FormControl, InputLabel, MenuItem, Select} from "@mui/material";
 
 export default function AdInstanceCreateDialog() {
     const {adInstanceCreateDialogProps} = useSelector((store: RootState) => store.dialog);
-    const {ads} = useSelector((store: RootState) => store.ad);
+    const ads = selectAllAds(store.getState().ad.ads);
     const [name, setName] = useState<string>("");
     const [templateKey, setTemplateKey] = useState<string>("");
     const dispatch = useDispatch();

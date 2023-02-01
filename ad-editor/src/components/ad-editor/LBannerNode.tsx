@@ -9,17 +9,14 @@ import {
 
 import {MouseEventHandler} from "react";
 
-import {
-  useDispatch,
-  useSelector
-} from "react-redux";
+import {useDispatch} from "react-redux";
 
 import {
-  updateAdPosition,
-  updateAdSize
+  selectAdById,
+  updateAd,
 } from "../../features/ad/adSlice";
 
-import {RootState} from "../../app/store";
+import {store} from "../../app/store";
 
 interface LBannerNodeProps {
   adKey: string,
@@ -36,10 +33,11 @@ function LBannerNode(props: LBannerNodeProps) {
     selected = false,
   }: LBannerNodeProps = props;
 
-  const {ads} = useSelector((store: RootState) => store.ad);
-  const ad = ads.find(current => current.key === adKey) as Ad;
+  const ad: Ad | undefined = selectAdById(store.getState().ad.ads, adKey);
 
   const dispatch = useDispatch();
+
+  if (ad === undefined) return <></>
 
   const style = {
     backgroundColor: "#ecf0f1",
@@ -89,8 +87,17 @@ function LBannerNode(props: LBannerNodeProps) {
               height: ad.props.height,
             }}
             onResize={(e, direction, ref, delta, position) => {
-              dispatch(updateAdSize({key: ad.key, width: ref.offsetWidth, height: ref.offsetHeight}));
-              dispatch(updateAdPosition({key: ad.key, top: position.y, left: position.x}));
+              dispatch(updateAd({
+                id: ad.key,
+                changes: {
+                  props: {
+                    ...ad.props,
+                    width: ref.offsetWidth,
+                    height: ref.offsetHeight,
+                    top: position.y,
+                    left: position.x
+                  }}
+              }));
             }}
             lockAspectRatio={true}
             disableDragging={true}

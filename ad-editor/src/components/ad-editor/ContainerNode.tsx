@@ -1,11 +1,11 @@
-import {ContainerType} from "../../ads/Container.interface";
+import Container, {ContainerType} from "../../ads/Container.interface";
 
 import {Rnd} from "react-rnd";
 
 import {
   removeContainer,
-  updateContainerPosition,
-  updateContainerSize
+  selectContainerById,
+  updateContainer,
 } from "../../features/ad/adSlice";
 
 import {
@@ -16,18 +16,13 @@ import {
 
 import CloseIcon from '@mui/icons-material/Close';
 
-import {
-  useDispatch,
-  useSelector
-} from "react-redux";
+import {useDispatch} from "react-redux";
 
 import {MouseEventHandler} from "react";
 
 import {pickContrastColor} from "../../util";
 
-import {RootState} from "../../app/store";
-
-import Ad from "../../ads/Ad.interface";
+import {store} from "../../app/store";
 
 interface ContainerNodeProps {
   containerKey: string;
@@ -48,11 +43,10 @@ export function ContainerNode(props: ContainerNodeProps) {
     selected = false,
   }: ContainerNodeProps = props;
 
-  const {ads} = useSelector((store: RootState) => store.ad);
-  const ad = ads.find(current => current.key === parentKey) as Ad;
-  const container = ad.props.children.find(current => current.key === containerKey);
-
+  const container: Container | undefined = selectContainerById(store.getState().ad.containers, containerKey);
   const dispatch = useDispatch();
+
+  if (container === undefined) return <></>
 
   const handleRemove = () => {
     dispatch(removeContainer({parentAdKey: parentKey, containerKey: containerKey}));
@@ -74,9 +68,6 @@ export function ContainerNode(props: ContainerNodeProps) {
     outlineOffset: "-2px",
   };
 
-  if (container === undefined)
-    return <></>
-
   return (
       <Rnd
           default={{
@@ -86,25 +77,29 @@ export function ContainerNode(props: ContainerNodeProps) {
             height: container.props.height,
           }}
           onDragStop={(e, d) => {
-            dispatch(updateContainerPosition({
-              parentAdKey: parentKey,
-              containerKey: container.key,
-              top: d.y,
-              left: d.x
+            dispatch(updateContainer({
+              id: container.key,
+              changes: {
+                props: {
+                  ...container.props,
+                  top: d.y,
+                  left: d.x,
+                }
+              }
             }));
           }}
           onResize={(e, direction, ref, delta, position) => {
-            dispatch(updateContainerSize({
-              parentAdKey: parentKey,
-              containerKey: container.key,
-              width: ref.offsetWidth,
-              height: ref.offsetHeight
-            }));
-            dispatch(updateContainerPosition({
-              parentAdKey: parentKey,
-              containerKey: container.key,
-              top: position.y,
-              left: position.x
+            dispatch(updateContainer({
+              id: container.key,
+              changes: {
+                props: {
+                  ...container.props,
+                  width: ref.offsetWidth,
+                  height: ref.offsetHeight,
+                  top: position.y,
+                  left: position.x,
+                }
+              }
             }));
           }}
           enableResizing={{

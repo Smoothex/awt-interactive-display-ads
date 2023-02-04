@@ -15,9 +15,9 @@ import {Box} from "@mui/material";
 
 import SimpleTextField from "./SimpleTextField";
 
-import ColorPickerButton from "./ColorPickerButton";
-
 import {updateContainer} from "../../features/ad/adSlice";
+
+import ColorPickerField from "./ColorPickerField";
 
 export const ImageContainerProperties = () => {
   const {containers} = useSelector((store: RootState) => store.ad);
@@ -33,16 +33,45 @@ export const ImageContainerProperties = () => {
           <SimpleTextField label="Height" getValue={() => currentContainer.props.height.toString()} disabled={true}/>
           <SimpleTextField label="Top" getValue={() => currentContainer.props.top.toString()} disabled={true}/>
           <SimpleTextField label="Left" getValue={() => currentContainer.props.left.toString()} disabled={true}/>
-          <ColorPickerButton
+
+          <ColorPickerField
               objectKey={currentContainer.key}
               label="Background Color"
-              getCurrentColor={() => currentContainer.props.backgroundColor as string}
+              getCurrentColor={() => currentContainer.props.backgroundColor || ""}
               setCurrentColor={(color) => {
                 dispatch(updateContainer({
                   id: currentContainer.key,
                   changes: {
                     props: {
-                      ...currentContainer.props, backgroundColor: color,
+                      ...currentContainer.props,
+                      backgroundColor: color,
+                    }
+                  }
+                }))
+              }}
+              removeCurrentColor={() => {
+                dispatch(updateContainer({
+                  id: currentContainer.key,
+                  changes: {
+                    props: {
+                      ...currentContainer.props,
+                      backgroundColor: undefined,
+                    }
+                  }
+                }))
+              }}
+          />
+
+          <SimpleTextField
+              label="Image address"
+              getValue={() => currentContainer.props.image !== undefined ? currentContainer.props.image : ""}
+              setValue={(newValue: string) => {
+                dispatch(updateContainer({
+                  id: currentContainer.key,
+                  changes: {
+                    props: {
+                      ...currentContainer.props,
+                      image: newValue,
                     }
                   }
                 }))

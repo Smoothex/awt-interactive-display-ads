@@ -13,10 +13,11 @@ import {Box} from "@mui/material";
 
 import SimpleTextField from "./SimpleTextField";
 
-import ColorPickerButton from "./ColorPickerButton";
-
 import {updateAd} from "../../features/ad/adSlice";
+
 import Ad from "../../ads/Ad.interface";
+
+import ColorPickerField from "./ColorPickerField";
 
 export const StandardBannerProperties = () => {
   const {ads} = useSelector((store: RootState) => store.ad);
@@ -32,19 +33,33 @@ export const StandardBannerProperties = () => {
           <SimpleTextField label="Height" getValue={() => currentAd.props.height.toString()} disabled={true}/>
           <SimpleTextField label="Top" getValue={() => currentAd.props.top.toString()} disabled={true}/>
           <SimpleTextField label="Left" getValue={() => currentAd.props.left.toString()} disabled={true}/>
-          <ColorPickerButton
+
+          <ColorPickerField
               objectKey={currentAd.key}
               label="Background Color"
-              getCurrentColor={() => currentAd.props.backgroundColor as string}
-              setCurrentColor={(color) => dispatch(updateAd({
-                id: currentAd.key,
-                changes: {
-                  props: {
-                    ...currentAd.props,
-                    backgroundColor: color
+              getCurrentColor={() => currentAd.props.backgroundColor || ""}
+              setCurrentColor={(color) => {
+                dispatch(updateAd({
+                  id: currentAd.key,
+                  changes: {
+                    props: {
+                      ...currentAd.props,
+                      backgroundColor: color
+                    }
                   }
-                }
-              }))}
+                }))
+              }}
+              removeCurrentColor={() => {
+                dispatch(updateAd({
+                  id: currentAd.key,
+                  changes: {
+                    props: {
+                      ...currentAd.props,
+                      backgroundColor: undefined,
+                    }
+                  }
+                }))
+              }}
           />
         </Box>
       </>

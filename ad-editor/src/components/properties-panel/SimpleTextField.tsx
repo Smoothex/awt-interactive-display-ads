@@ -1,6 +1,14 @@
-import React from 'react';
+import React, {
+  MouseEventHandler,
+  ReactNode
+} from 'react';
 
 import TextField from "@mui/material/TextField";
+
+import {
+  IconButton,
+  InputAdornment
+} from "@mui/material";
 
 interface Props {
   label: string;
@@ -9,6 +17,12 @@ interface Props {
   disabled?: boolean;
   multiline?: boolean;
   minRows?: number;
+  startButtonIcon?: ReactNode,
+  startButtonOnClick?: MouseEventHandler
+  endButtonIcon1?: ReactNode,
+  endButtonOnClick1?: MouseEventHandler,
+  endButtonIcon2?: ReactNode,
+  endButtonOnClick2?: MouseEventHandler
 }
 
 const SimpleTextField = (props: Props) => {
@@ -18,7 +32,13 @@ const SimpleTextField = (props: Props) => {
     setValue,
     disabled = false,
     multiline = false,
-    minRows
+    minRows,
+    startButtonIcon,
+    startButtonOnClick,
+    endButtonIcon1,
+    endButtonOnClick1,
+    endButtonIcon2,
+    endButtonOnClick2,
   } = props;
 
   return (
@@ -36,6 +56,31 @@ const SimpleTextField = (props: Props) => {
           margin="dense"
           multiline={multiline}
           minRows={minRows}
+          InputProps={{
+            startAdornment: (
+                <InputAdornment position="start">
+                  {startButtonIcon &&
+                      <IconButton edge="start" onClick={startButtonOnClick}>
+                        {startButtonIcon}
+                      </IconButton>
+                  }
+                </InputAdornment>
+            ),
+            endAdornment: (
+                <InputAdornment position="end">
+                  {endButtonIcon1 &&
+                      <IconButton edge="end" onClick={endButtonOnClick1}>
+                        {endButtonIcon1}
+                      </IconButton>
+                  }
+                  {endButtonIcon2 &&
+                      <IconButton edge="end" onClick={endButtonOnClick2}>
+                        {endButtonIcon2}
+                      </IconButton>
+                  }
+                </InputAdornment>
+            )
+          }}
       />
   );
 };

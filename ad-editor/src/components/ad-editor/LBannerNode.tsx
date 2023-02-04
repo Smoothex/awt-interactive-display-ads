@@ -72,7 +72,7 @@ function LBannerNode(props: LBannerNodeProps) {
               topLeft: false
             }}
             style={{
-              backgroundColor: ad.props.backgroundColor ? ad.props.backgroundColor : "#ffffff",
+              backgroundColor: ad.props.backgroundColor || "#ffffff",
               border: "1px solid lightgray"
             }}
             className={"l-banner-" + ad.key}

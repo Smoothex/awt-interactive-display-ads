@@ -18,8 +18,6 @@ import {MouseEventHandler} from "react";
 
 import {store} from "../../app/store";
 
-import {pickContrastColor} from "../../util";
-
 interface StandardBannerNodeProps {
   adKey: string,
   onClick: MouseEventHandler<HTMLDivElement>;
@@ -42,14 +40,12 @@ function StandardBannerNode(props: StandardBannerNodeProps) {
   if (ad === undefined) return <></>
 
   const style = {
-    backgroundColor: ad.props.backgroundColor,
-    color: pickContrastColor(ad.props.backgroundColor as string, "#ffffff", "#000000"),
+    backgroundColor: ad.props.backgroundColor || "#ffffff",
     border: "1px solid lightgray"
   };
 
   const styleSelected = {
-    backgroundColor: ad.props.backgroundColor,
-    color: pickContrastColor(ad.props.backgroundColor as string, "#ffffff", "#000000"),
+    backgroundColor: ad.props.backgroundColor || "#ffffff",
     border: "4px solid #74b9ff",
     outline: "#0984e3 solid 1px",
     outlineOffset: "-2px",

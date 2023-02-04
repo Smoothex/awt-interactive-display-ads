@@ -21,9 +21,9 @@ import {
 
 import SimpleTextField from "./SimpleTextField";
 
-import ColorPickerButton from "./ColorPickerButton";
-
 import {updateAd} from "../../features/ad/adSlice";
+
+import ColorPickerField from "./ColorPickerField";
 
 export const LBannerProperties = () => {
   const {ads} = useSelector((store: RootState) => store.ad);
@@ -44,19 +44,32 @@ export const LBannerProperties = () => {
 
         <PropertiesPanelHeader icon={PictureInPicture} label={"L-Banner"}/>
         <Box style={{padding: "0.5rem"}}>
-          <ColorPickerButton
+          <ColorPickerField
               objectKey={currentAd.key}
               label="Background Color"
-              getCurrentColor={() => currentAd.props.backgroundColor as string}
-              setCurrentColor={(color) => dispatch(updateAd({
-                id: currentAd.key,
-                changes: {
-                  props: {
-                    ...currentAd.props,
-                    backgroundColor: color
+              getCurrentColor={() => currentAd.props.backgroundColor || ""}
+              setCurrentColor={(color) => {
+                dispatch(updateAd({
+                  id: currentAd.key,
+                  changes: {
+                    props: {
+                      ...currentAd.props,
+                      backgroundColor: color
+                    }
                   }
-                }
-              }))}
+                }))
+              }}
+              removeCurrentColor={() => {
+                dispatch(updateAd({
+                  id: currentAd.key,
+                  changes: {
+                    props: {
+                      ...currentAd.props,
+                      backgroundColor: undefined,
+                    }
+                  }
+                }))
+              }}
           />
         </Box>
       </>

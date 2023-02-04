@@ -16,4 +16,21 @@ export interface ContainerProps {
     top: number;
     left: number;
     backgroundColor?: string;
+
+    //-- TextContainer Props
+    text?: string;
+    textAlign?: "left" | "center" | "right";
+    fontWeight?: "normal" | "bold";
+    fontStyle?: "normal" | "italic"
+    textDecoration?: "none" | "underline"
+    fontFamily?: string;
+    fontSize?: string; // 16px, 32px, 48px
+    color?: string;
+
+    //-- ImageContainer Props
+    image?: string;
+
+    //-- SlideshowContainer Props
+    images?: string[];
+    nextImageButton?: string; // reg, green, blue, yellow
 }

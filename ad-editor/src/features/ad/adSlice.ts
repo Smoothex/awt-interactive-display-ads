@@ -1,18 +1,20 @@
 import {
-  createSlice,
   createEntityAdapter,
-  PayloadAction,
+  createSlice,
   EntityState,
+  PayloadAction,
   Update
 } from "@reduxjs/toolkit";
 
-import Ad, {AdType} from "../../ads/Ad.interface";
+import Ad, {
+  AdType
+} from "../../ads/Ad.interface";
 
-import {
-  v4 as uuidv4
-} from 'uuid';
+import {v4 as uuidv4} from 'uuid';
 
-import Container, {ContainerType} from "../../ads/Container.interface";
+import Container, {
+  ContainerType
+} from "../../ads/Container.interface";
 
 import AdContainer from "../../ads/AdContainer.interface";
 
@@ -174,8 +176,27 @@ const adSlice = createSlice({
           height: 100,
           top: 0,
           left: 0,
-          backgroundColor: "#ffffff"
         }
+      }
+
+      if(action.payload.containerType === ContainerType.Text) {
+        const textProps = {
+          textAlign: "left",
+          fontWeight: "normal",
+          fontStyle: "normal",
+          textDecoration: "none",
+          fontFamily: "Helvetica, sans-serif",
+          fontSize: "16px",
+          color: "#000000",
+        }
+        container.props = { ...container.props, ...textProps}
+      }
+
+      if(action.payload.containerType === ContainerType.Slideshow) {
+        const slideshowProps = {
+          nextImageButton: "red"
+        }
+        container.props = { ...container.props, ...slideshowProps}
       }
 
       //-- Add the container to the state

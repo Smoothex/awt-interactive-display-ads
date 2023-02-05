@@ -111,7 +111,7 @@ function StandardBannerNode(props: StandardBannerNodeProps) {
             onMouseDown={onMouseDown}
         >
           <Typography variant="subtitle1" gutterBottom>
-            Standard Banner
+            {/*Standard Banner*/}
           </Typography>
         </Box>
       </Rnd>

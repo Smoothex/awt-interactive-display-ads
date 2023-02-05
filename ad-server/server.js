@@ -10,7 +10,7 @@ const server = http.createServer((request, response) => {
     console.log("VAST request received")
 
     // Fetch the currently available display ads
-    getDisplayAds('http://127.0.0.1:9000/s/6EWXz6BbsteJGKJ/download/DA_Links.md')
+    getDisplayAds('http://127.0.0.1:9000/s/a6ZE9gKcWa3Kk99/download/DA_Links.md')
     .then((response_with_DAs) => {
       let nonEmptyLines = response_with_DAs.split('\n').filter((line) => line.trim() !== '')
 

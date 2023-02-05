@@ -23,7 +23,7 @@ const KEY_MAP = {
 
 const AdType = {
     LBanner: "l-banner",
-    StandardBanner: "standard-banner",
+    StandardBanner: "standard-banner"
 }
 
 const ContainerType = {
@@ -114,7 +114,7 @@ function adScene(app, videoId, safeAreaId) {
      */
     function registerKey(key, callback) {
         document.addEventListener('keydown', function(e) {
-            if (e.keyCode === key) { // keyCode is depreciated Event property but still relevant for HbbTV apps
+            if (e.keyCode === key) { // keyCode is deprecated event property but still relevant for HbbTV apps
                 callback();
                 e.preventDefault();
             }

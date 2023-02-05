@@ -3,7 +3,7 @@
 //
 const VAST_URL = "http://127.0.0.1:8080/vast";
 const AD_PERIOD = 1000 * 60 * 1; // 0.2 minutes dummy period 
-const developmentMode = true;
+const developmentMode = false;
 
 if (developmentMode) {
     var dummy_duration = 30000;
@@ -50,15 +50,14 @@ function requestAd() {
         makeVASTRequest(VAST_URL)
         .then(function (VASTResponse) {
             console.log(VASTResponse);
-            /* Uncomment when the server is ready to use
-            fetch(VASTResponse.url)
+            fetch(VASTResponse.url + "/download")
             .then((response) => response.json())
             .then((json) => {
+                console.log(json)
                 let ad = currentAdScene.createAd(json);
                 currentAdScene.displayAd(ad);
                 setTimeout(() => {currentAdScene.removeAd( ad)}, VASTResponse.duration*1000);
-            }); 
-            */
+            });
         })
         .catch(function (err) {
             console.error('Error occurred at requesting an ad!', err.statusText);

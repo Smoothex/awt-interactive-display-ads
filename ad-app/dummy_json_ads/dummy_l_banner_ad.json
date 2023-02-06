@@ -1,18 +1,22 @@
 {
     "key": "2",
     "type": "l-banner",
+    "name": "first stupid name for a l banner",
     "props": {
-        "width": "256px",
+        "width": 1024,
+        "height": 200,
+        "left": 128,
+        "top": 500,
         "background_color": "#010175",
         "children": [
             {
                 "key": "1",
                 "type": "image-container", 
                 "props": {
-                    "width": "256px",
-                    "height": "576px",
-                    "left": "0px",
-                    "top": "0px",
+                    "width": 256,
+                    "height": 576,
+                    "left": 0,
+                    "top": 0,
                     "image": "./media/bottle-vodka-gin-isolated-on-600w-1833553141.webp"
                 }
             },
@@ -20,10 +24,10 @@
                 "key": "2",
                 "type": "text-container", 
                 "props": {
-                    "width": "800px",
-                    "height": "144px",
-                    "left": "256px",
-                    "top": "576px",
+                    "width": 800,
+                    "height": 144,
+                    "left": 256,
+                    "top": 576,
                     "color": "white",
                     "textAlign": "center",
                     "fontFamily": "Arial, Helvetica, sans-serif",

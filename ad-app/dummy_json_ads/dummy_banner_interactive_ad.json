@@ -1,21 +1,22 @@
 {
     "key": "1",
     "type": "standard-banner",
+    "name": "another stupid standard banner",
     "props": {
-        "width": "1024px",
-        "height": "200px",
-        "left": "128px",
-        "top": "500px",
+        "width": 1024,
+        "height": 200,
+        "left": 128,
+        "top": 500,
         "background_color": "#010175",
         "children": [
             {
                 "key": "1",
                 "type": "slideshow-container", 
                 "props": {
-                    "width": "120px",
-                    "height": "200px",
-                    "left": "0px",
-                    "top": "0px",
+                    "width": 120,
+                    "height": 200,
+                    "left": 0,
+                    "top": 0,
                     "images": ["./media/silver_tablet.jpg", "./media/red_tabled.jpg", "./media/yellow_tablet.jpg"],
                     "nextImageButton": "blue"
                 }
@@ -24,10 +25,10 @@
                 "key": "2",
                 "type": "text-container", 
                 "props": {
-                    "width": "800px",
-                    "height": "200px",
-                    "left": "200px",
-                    "top": "0px",
+                    "width": 800,
+                    "height": 200,
+                    "left": 200,
+                    "top": 0,
                     "color": "white",
                     "textAlign": "center",
                     "fontFamily": "Arial, Helvetica, sans-serif",

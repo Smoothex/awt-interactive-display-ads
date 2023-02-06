@@ -1,0 +1,44 @@
+{
+  "key": "07ca86e1-2910-4c90-af37-2986686e1b55",
+  "name": "coca-cola-l-banner",
+  "type": "l-banner",
+  "props": {
+    "width": 639,
+    "height": 358,
+    "top": 0,
+    "left": 641,
+    "backgroundColor": "#a18c3d",
+    "children": [
+      {
+        "key": "cd94136c-6689-459d-8829-0b704f147f5e",
+        "type": "image-container",
+        "props": {
+          "width": 526,
+          "height": 406,
+          "top": 21,
+          "left": 57,
+          "image": "https://cdn.pixabay.com/photo/2014/09/26/19/51/drink-462776_960_720.jpg"
+        }
+      },
+      {
+        "key": "88963f15-a655-4c60-996f-d96db07bd795",
+        "type": "text-container",
+        "props": {
+          "width": 743,
+          "height": 162,
+          "top": 490,
+          "left": 290,
+          "text": "Example text...",
+          "fontSize": "64px",
+          "textAlign": "center",
+          "color": "#000000",
+          "fontWeight": "bold",
+          "fontStyle": "italic",
+          "textDecoration": "underline",
+          "fontFamily": "Helvetica, sans-serif"
+        }
+      }
+    ]
+  },
+  "isTemplate": false
+}

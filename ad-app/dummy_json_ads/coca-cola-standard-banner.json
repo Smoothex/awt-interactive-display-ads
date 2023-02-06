@@ -1,0 +1,30 @@
+{
+  "key": "91321d43-68cc-44eb-8089-8610641c8460",
+  "name": "coca-cola-standard-banner",
+  "type": "standard-banner",
+  "props": {
+    "width": 710,
+    "height": 192,
+    "top": 455,
+    "left": 306,
+    "backgroundColor": "#a18c3d",
+    "children": [
+      {
+        "key": "7f08020f-d6a0-4f59-a707-18c2b2d67ad4",
+        "type": "slideshow-container",
+        "props": {
+          "width": 710,
+          "height": 192,
+          "top": 455,
+          "left": 306,
+          "nextImageButton": "red",
+          "images": [
+            "https://de.coca-cola.ch/content/dam/one/ch/de/article-lead/coca-cola/products-innovations/das-coca-cola-logo.jpg",
+            "https://www.coca-cola-deutschland.de/content/dam/one/de/de/article-lead/acht-buchstaben-ein-bindestrich-das-coca-cola-logo-header.jpg"
+          ]
+        }
+      }
+    ]
+  },
+  "isTemplate": false
+}

@@ -3,12 +3,12 @@
 //
 const VAST_URL = "http://127.0.0.1:8080/vast";
 const AD_PERIOD = 1000 * 60 * 1; // 0.2 minutes dummy period 
-const developmentMode = false;
+const developmentMode = true;
 
 if (developmentMode) {
     var dummy_duration = 30000;
     var dummy_counter = 0;
-    var dummy_ads = ['./dummy_json_ads/test_tablet_ad.json', './dummy_json_ads/test_beer_ad.json'];
+    var dummy_ads = ['./dummy_json_ads/coca-cola-l-banner.json', './dummy_json_ads/coca-cola-standard-banner.json'];
 }
 
 var currentAdScene = null;
@@ -42,21 +42,25 @@ function requestAd() {
         .then((response) => response.json())
         .then((json) => {
             let ad = currentAdScene.createAd(json);
+            if (ad == null) {
+                console.error(`Ad is not valid and will not be displayed!`)
+                return false;
+            }
             currentAdScene.displayAd(ad);
             setTimeout(() => {currentAdScene.removeAd( ad)}, dummy_duration);
-        }); 
+        });
     } else {
         // request a VAST server for an ad and display it
         makeVASTRequest(VAST_URL)
         .then(function (VASTResponse) {
-            console.log(VASTResponse);
+            console.log(VASTResponse); 
             fetch(VASTResponse.url + "/download")
             .then((response) => response.json())
             .then((json) => {
                 console.log(json)
                 let ad = currentAdScene.createAd(json);
                 currentAdScene.displayAd(ad);
-                setTimeout(() => {currentAdScene.removeAd( ad)}, VASTResponse.duration*1000);
+                setTimeout(() => {currentAdScene.removeAd(ad)}, VASTResponse.duration*1000);
             });
         })
         .catch(function (err) {

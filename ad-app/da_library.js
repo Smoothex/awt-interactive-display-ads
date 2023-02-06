@@ -32,6 +32,14 @@ const ContainerType = {
     Slideshow: "slideshow-container"
 }
 
+const textAlignList = ["center", "left", "right"];
+const fontWeightList = ["bold", "none"];
+const fontStyleList = ["italic", "none"];
+const textDecorationList = ["underlined", "none"];
+const nextImageButtonList = ["red", "blue", "green", "yellow"];
+
+
+
 /**
  * Creates an 'scene' object that contains attributes and methods for managing global objects and static HTML elements.
  * 
@@ -47,13 +55,15 @@ function adScene(app, videoId, safeAreaId) {
     /**
      * private: Rescale the video container.
      * 
-     * @param {string} width 
+     * @param {number} left
+     * @param {number} width
+     * @param {number} height 
      */
-    function resizeVideo(width) {
-        let ratio = Number(1280 - width.slice(0,-2))/1280;
-        videoElement.style.left = width;
-        videoElement.style.width = (1280*(ratio)).toString() + "px";
-        videoElement.style.height = (720*(ratio)).toString() + "px";
+    function resizeVideo(left, width, height) {
+        console.log("Resizing...")
+        videoElement.style.left = `${left}px`;
+        videoElement.style.width = `${width}px`;
+        videoElement.style.height = `${height}px`;
         
     };
 
@@ -130,20 +140,23 @@ function adScene(app, videoId, safeAreaId) {
      *                    width - width of the ad (relevant only for L-banners)
      */
     function createAd(adObject) {
+        if (!validateDA(adObject)) {
+            return;
+        }
         let element = document.createElement("div");
         //element.id = adObject.type + "-div";
         element.style.position = "absolute";
         if (adObject.type === AdType.StandardBanner) {
-            element.style.width = adObject.props.width;
-            element.style.height = adObject.props.height;
-            element.style.left = adObject.props.left;
-            element.style.top = adObject.props.top;
-            element.style.background = adObject.props.background_color;
+            element.style.width = `${adObject.props.width.toString()}px`;
+            element.style.height = `${adObject.props.height.toString()}px`;
+            element.style.left = `${adObject.props.left.toString()}px`;
+            element.style.top = `${adObject.props.top.toString()}px`;
+            element.style.background = adObject.props.backgroundColor;
             element.style.animation = "append-animate .5s linear";
         } else if (adObject.type === AdType.LBanner) {
             element.style.width = "1280px";
             element.style.height = "720px";
-            element.style.background = adObject.props.background_color;
+            element.style.background = adObject.props.backgroundColor;
             element.style.zIndex = "-10";
         } else {
             console.error(`Such ad type does not exist: ${adObject.type}`);
@@ -165,7 +178,7 @@ function adScene(app, videoId, safeAreaId) {
             }
         });
 
-        return {element: element, type: adObject.type, shift: adObject.props.width};
+        return {element: element, object: adObject};
     }
 
     /**
@@ -177,10 +190,10 @@ function adScene(app, videoId, safeAreaId) {
     function createImgContainer(props) {
         let element = document.createElement("img");
         element.style.position = "absolute";
-        element.style.width = props.width;
-        element.style.height = props.height;
-        element.style.left = props.left;
-        element.style.top = props.top;
+        element.style.width = `${props.width}px`;
+        element.style.height = `${props.height}px`;
+        element.style.left = `${props.left}px`;
+        element.style.top = `${props.top}px`;
         element.src = props.image;
         
         return element;
@@ -196,10 +209,10 @@ function adScene(app, videoId, safeAreaId) {
         // create a div element for the ad and set its properties
         let element = document.createElement("div");
         element.style.position = "absolute";
-        element.style.width = props.width;
-        element.style.height = props.height;
-        element.style.left = props.left;
-        element.style.top = props.top;
+        element.style.width = `${props.width}px`;
+        element.style.height = `${props.height}px`;
+        element.style.left = `${props.left}px`;
+        element.style.top = `${props.top}px`;
         // loading all images inside the created 'div' element 
         let images = [];
         let imageCounter = 0;
@@ -272,15 +285,16 @@ function adScene(app, videoId, safeAreaId) {
         let element = document.createElement("p");
         element.style.margin = "0px";
         element.style.position = "absolute";
-        element.style.width = props.width;
-        element.style.height = props.height;
-        element.style.left = props.left;
-        element.style.top = props.top;
+        element.style.width = `${props.width}px`;
+        element.style.height = `${props.height}px`;
+        element.style.left = `${props.left}px`;
+        element.style.top = `${props.top}px`;
         element.style.textAlign = props.textAlign;
         element.style.fontFamily = props.fontFamily;
         element.style.fontStyle = props.fontStyle;
         element.style.fontSize = props.fontSize;
         element.style.fontWeight = props.fontWeight;
+        element.style.textDecoration = props.textDecoration;
         element.style.color = props.color;
         element.innerHTML = props.text;
 
@@ -294,11 +308,11 @@ function adScene(app, videoId, safeAreaId) {
      * @returns {null}
      */
     function displayAd(ad) {
-        if (ad.type === AdType.StandardBanner) {
+        if (ad.object.type === AdType.StandardBanner) {
             safeAreaElement.appendChild(ad.element);
-        } else if (ad.type === AdType.LBanner) {
+        } else if (ad.object.type === AdType.LBanner) {
             safeAreaElement.appendChild(ad.element);
-            resizeVideo(ad.shift);
+            resizeVideo(ad.object.props.left, ad.object.props.width, ad.object.props.height);
         }
     }
 
@@ -309,10 +323,10 @@ function adScene(app, videoId, safeAreaId) {
      * @returns {null}
      */
     function removeAd(ad) {
-        if (ad.type === AdType.StandardBanner) {
+        if (ad.object.type === AdType.StandardBanner) {
             setTimeout(() => {safeAreaElement.removeChild(ad.element);}, 450);
             ad.element.style.animation = "remove-animate .5s linear";
-        } else if (ad.type === AdType.LBanner) {
+        } else if (ad.object.type === AdType.LBanner) {
             restoreVideo();
             setTimeout(() => {safeAreaElement.removeChild(ad.element)}, 1000);
         }
@@ -332,4 +346,117 @@ function adScene(app, videoId, safeAreaId) {
         displayAd,
         removeAd
     };
+}
+
+/**
+ * private: It validates all attributes of the parsed JSON object for a DA.
+ * @param {object} da_instance 
+ * @returns: true is all attributes are present and valid, else false
+ */
+function  validateDA(da_instance) {
+    console.log('key')
+    if (!da_instance.hasOwnProperty("key")) return false;
+    if (typeof da_instance.key !== "string") return false;
+    console.log('name')
+    if (!da_instance.hasOwnProperty("name")) return false;
+    if (typeof da_instance.name !== "string") return false;
+    console.log('type')
+    if (!da_instance.hasOwnProperty("type")) return false;
+    if (da_instance.type !== AdType.StandardBanner && da_instance.type !== AdType.LBanner) return false;
+    console.log('props')
+    if (!da_instance.hasOwnProperty("props")) return false;
+    if (typeof da_instance.props !== "object") return false;
+    console.log("the containers' 'props'")
+    let props = da_instance.props
+    console.log('width')
+    if (!props.hasOwnProperty("width")) return false;
+    if (props.width <= 0 || props.width > 1280) return false;
+    console.log('height')
+    if (!props.hasOwnProperty("height")) return false;
+    if (props.height <= 0 || props.width > 720) return false;
+    console.log('top')
+    if (!props.hasOwnProperty("top")) return false;
+    if (props.top < 0 || props.width >= 720) return false;
+    console.log('left')
+    if (!props.hasOwnProperty("left")) return false;
+    if (props.left <= 0 || props.left >= 1280) return false;
+    // check 'backgroundColor'
+    if (!props.hasOwnProperty("backgroundColor")) return false;
+    if (typeof props.backgroundColor !== "string") {
+        return false;
+    }  else {
+        if (props.backgroundColor.length !== 7 && props.backgroundColor[0] !== "#") return false;
+    }
+    console.log('children')
+    if (!props.hasOwnProperty("children")) return false;
+    if (!Array.isArray(props.children)) return false;
+    console.log("all attributes of 'children'")
+    props.children.forEach(container => {
+        console.log('key')
+        if (!container.hasOwnProperty("key")) return false;
+        if (typeof container.key !== "string") return false;   
+        console.log('type')
+        if (!container.hasOwnProperty("type")) return false;
+        console.log('width')
+        if (!container.hasOwnProperty("width")) return false;
+        if (container.width <= 0 || container.width > 1280) return false;
+        console.log('height')
+        if (!container.hasOwnProperty("height")) return false;
+        if (container.height <= 0 || container.width > 720) return false;
+        console.log('top')
+        if (!container.hasOwnProperty("top")) return false;
+        if (container.top < 0 || container.width >= 720) return false;
+        console.log('left')
+        if (!container.hasOwnProperty("left")) return false;
+        if (container.left <= 0 || container.left >= 1280) return false;
+        console.log('the custom attributes')
+        if (container.type === ContainerType.Text) {
+            console.log('text')
+            if (!container.hasOwnProperty("text")) return false;
+            if (typeof container.text !== "string") return false;
+            console.log('fontSize')
+            if (!container.hasOwnProperty("fontSize")) return false;
+            if (typeof container.fontSize !== "string") {
+                return false;
+            } else {
+                if (container.fontSize.slice(-2) !== "px") return false;
+            } 
+            console.log('textAlign')
+            if (!container.hasOwnProperty("textAlign")) return false;
+            if (!(container.textAlign in textAlignList)) return false; 
+            console.log('color')
+            if (!container.hasOwnProperty("color")) return false;
+            if (typeof container.color !== "string") {
+                return false;
+            }  else {
+                if (container.color.length !== 7 && container.color[0] !== "#") return false;
+            }
+            console.log('fontWeight')
+            if (!container.hasOwnProperty("fontWeight")) return false;
+            if (!(container.fontWeight in fontWeightList)) return false; 
+            console.log('fontStyle')
+            if (!container.hasOwnProperty("fontStyle")) return false;
+            if (!(container.fontStyle in fontStyleList)) return false; 
+            console.log('textDecoration')
+            if (!container.hasOwnProperty("textDecoration")) return false;
+            if (!(container.textDecoration in textDecorationList)) return false; 
+            console.log('fontFamily')
+            if (!container.hasOwnProperty("fontFamily")) return false;
+            if (typeof container.fontFamily !== "string") return false;   
+        } else if (container.type === ContainerType.Image) {
+            console.log('image')
+            if (!container.hasOwnProperty("image")) return false;
+            if (typeof container.image !== "string") return false;
+        } else if (container.type === ContainerType.Slideshow) {
+            console.log('nextImageButton')
+            if (!container.hasOwnProperty("nextImageButton")) return false;
+            if (!(container.nextImageButton in nextImageButtonList)) return false; 
+            console.log('images')
+            if (!props.hasOwnProperty("images")) return false;
+            if (!Array.isArray(props.images)) return false;
+        } else {
+            return false;
+        }
+    })
+    return true
 }

@@ -48,9 +48,12 @@ const nextImageButtonList = ["red", "blue", "green", "yellow"];
  * @returns {object}: initialized object for manipulating the scene 
  */
 function adScene(app, videoId, safeAreaId) {
-    let appObject = app;
-    let videoElement = document.getElementById(videoId);
-    let safeAreaElement = document.getElementById(safeAreaId);
+    let appObject = app;  // the JSON object holding the app properties 
+    let videoElement = document.getElementById(videoId);  // HTML element holding the broadcasted video
+    let safeAreaElement = document.getElementById(safeAreaId);  // HTML element that SHALL wrap all elements relevant to the App
+    let videoTransition;  // number of seconds (float) for transitioning when resizing the broadcasted video
+    let bannerTransition;  // number of seconds (float) for displaying and removing standard banner ad
+    let restImgToRenderCounter = 0;  // number of pictures that are still not loaded of the current ad
 
     /**
      * private: Rescale the video container.
@@ -60,7 +63,7 @@ function adScene(app, videoId, safeAreaId) {
      * @param {number} height 
      */
     function resizeVideo(left, width, height) {
-        console.log("Resizing...")
+        console.debug("Now the video element is being resized!")
         videoElement.style.left = `${left}px`;
         videoElement.style.width = `${width}px`;
         videoElement.style.height = `${height}px`;
@@ -71,9 +74,7 @@ function adScene(app, videoId, safeAreaId) {
      * private: Scale video container to the default size: 1280x720.
      */
     function restoreVideo() {
-        videoElement.style.left = "0px";
-        videoElement.style.width = "1280px";
-        videoElement.style.height = "720px";
+        resizeVideo(0, 1280, 720);
     };
 
     /**
@@ -143,8 +144,7 @@ function adScene(app, videoId, safeAreaId) {
         if (!validateDA(adObject)) {
             return;
         }
-        let element = document.createElement("div");
-        //element.id = adObject.type + "-div";
+        let element = document.createElement("div");  // the element holding the ad 
         element.style.position = "absolute";
         if (adObject.type === AdType.StandardBanner) {
             element.style.width = `${adObject.props.width.toString()}px`;
@@ -152,7 +152,7 @@ function adScene(app, videoId, safeAreaId) {
             element.style.left = `${adObject.props.left.toString()}px`;
             element.style.top = `${adObject.props.top.toString()}px`;
             element.style.background = adObject.props.backgroundColor;
-            element.style.animation = "append-animate .5s linear";
+            element.style.animation = `append-animate ${bannerTransition}s linear forwards`;
         } else if (adObject.type === AdType.LBanner) {
             element.style.width = "1280px";
             element.style.height = "720px";
@@ -164,19 +164,31 @@ function adScene(app, videoId, safeAreaId) {
         
         // add containers
         adObject.props.children.forEach(container => {
+            // the containers' positioning properties are originally related to the TV screen borders
+            // here these are converted to relate to the ad element borders
+            if (adObject.type === AdType.StandardBanner) {
+                container.props.left -= adObject.props.left;
+                container.props.top -= adObject.props.top;
+            }
+            // create and append current container to the ad element
             if (container.type === ContainerType.Image) {
                 let containerElement = createImgContainer(container.props);
                 element.appendChild(containerElement);
+                // increase restImgToRenderCounter
+                restImgToRenderCounter += 1;
             } else if (container.type === ContainerType.Text) {
                 let containerElement = createTextContainer(container.props);
                 element.appendChild(containerElement);
             } else if (container.type === ContainerType.Slideshow) {
                 let containerElement = createSlideshowContainer(container.props);
                 element.appendChild(containerElement);
+                // increase restImgToRenderCounter
+                restImgToRenderCounter += container.props.images.length;
             }else {
                 console.error(`Such container type does not exist: ${container.type}`);
             }
         });
+        
 
         return {element: element, object: adObject};
     }
@@ -188,14 +200,24 @@ function adScene(app, videoId, safeAreaId) {
      * @returns {HTMLImageElement}
      */
     function createImgContainer(props) {
-        let element = document.createElement("img");
+        let element = document.createElement("div");
         element.style.position = "absolute";
+        element.style.display = "flex";
         element.style.width = `${props.width}px`;
         element.style.height = `${props.height}px`;
         element.style.left = `${props.left}px`;
         element.style.top = `${props.top}px`;
-        element.src = props.image;
-        
+        let img = document.createElement("img");
+        img.style.cssText = "max-width: 100%; max-height: 100%; display: block; margin: auto;";
+        img.onload = () => {
+            restImgToRenderCounter -= 1;
+            console.debug("Image is loaded!");
+            if (restImgToRenderCounter === 0) {
+                console.debug("Last image was loaded!");
+            }
+        };
+        img.src = props.image;
+        element.appendChild(img);
         return element;
     }
 
@@ -209,6 +231,7 @@ function adScene(app, videoId, safeAreaId) {
         // create a div element for the ad and set its properties
         let element = document.createElement("div");
         element.style.position = "absolute";
+        element.style.display = "flex";
         element.style.width = `${props.width}px`;
         element.style.height = `${props.height}px`;
         element.style.left = `${props.left}px`;
@@ -216,45 +239,30 @@ function adScene(app, videoId, safeAreaId) {
         // loading all images inside the created 'div' element 
         let images = [];
         let imageCounter = 0;
+        let numImgToLoad = props.images.length;
         props.images.forEach(src => {
-            let image = document.createElement("img");
-            image.style.position = "absolute";
-            image.style.width = "100%";
-            image.style.height  = "100%";
-            image.src = src;
+            let img = document.createElement("img");
+            img.style.cssText = "max-width: 100%; max-height: 100%; margin: auto;";
+            img.onload = () => {
+                restImgToRenderCounter -= 1;
+                console.debug("Image is loaded!");
+                if (restImgToRenderCounter === 0) {
+                    console.debug("Last image was loaded!");
+                }
+            };
+            img.src = src;
             if (imageCounter === 0) {
-                image.style.display = "block";
+                img.style.display = "block";
             } else {
-                image.style.display = "none";
+                img.style.display = "none";
             }
-            element.appendChild(image);
-            images.push(image);
+            element.appendChild(img);
+            images.push(img);
             imageCounter++;
         });
         // create a a hint box for for the assigned color button
-        let symbolContainer = document.createElement('div'); 
-        {
-            symbolContainer.style.position = "absolute";
-            symbolContainer.style.bottom = "0px";
-            symbolContainer.style.left = "0px";
-            symbolContainer.style.width = "35px";
-            symbolContainer.style.height = "10px";
-            symbolContainer.style.background = "#00000080";
-            symbolContainer.style.color = "white";
-            symbolContainer.style.fontSize = "10px";
-            symbolContainer.innerText = "Press";
-        }
-        let symbol = document.createElement('div');
-        {
-            symbol.style.position = "absolute";
-            symbol.style.bottom = "0px";
-            symbol.style.left = "25px";
-            symbol.style.width = "10px";
-            symbol.style.height = "10px";
-            symbol.style.background = props.nextImageButton;
-        }
+        let symbolContainer = createSlideshowSymbol(props.nextImageButton);
         element.appendChild(symbolContainer);
-        symbolContainer.appendChild(symbol);
         // adding functionality for interaction with the add 
         element.dataset.index = "0"; // saving the index of the current display image
         let numberImages = images.length;
@@ -273,6 +281,38 @@ function adScene(app, videoId, safeAreaId) {
         registerKey(keyCode, eventCallback);
         
         return element;
+    }
+
+    /**
+     * private: Create Div Element for the symbol hinting how to switch between pictures on slideshow container.
+     * @param {string} color 
+     * @returns 
+     */
+    function createSlideshowSymbol(color) {
+        let symbolContainer = document.createElement('div'); 
+        {
+            symbolContainer.style.position = "absolute";
+            symbolContainer.style.bottom = "0px";
+            symbolContainer.style.left = "0px";
+            symbolContainer.style.width = "55px";
+            symbolContainer.style.height = "15px";
+            symbolContainer.style.background = "#00000080";
+            symbolContainer.style.color = "white";
+            symbolContainer.style.fontSize = "15px";
+            symbolContainer.style.fontFamily = "Arial";
+            symbolContainer.innerText = "Press";
+        }
+        let symbol = document.createElement('div');
+        {
+            symbol.style.position = "absolute";
+            symbol.style.bottom = "0px";
+            symbol.style.left = "40px";
+            symbol.style.width = "15px";
+            symbol.style.height = "15px";
+            symbol.style.background = color;
+        }
+        symbolContainer.appendChild(symbol);
+        return symbolContainer
     }
 
     /**
@@ -297,6 +337,9 @@ function adScene(app, videoId, safeAreaId) {
         element.style.textDecoration = props.textDecoration;
         element.style.color = props.color;
         element.innerHTML = props.text;
+        if (props.hasOwnProperty("backgroundColor")) {
+            element.style.backgroundColor = props.backgroundColor;
+        }
 
         return element;
     }
@@ -308,7 +351,15 @@ function adScene(app, videoId, safeAreaId) {
      * @returns {null}
      */
     function displayAd(ad) {
+
+        if (restImgToRenderCounter !== 0) {
+            console.debug("Ad not ready yet!")
+            setTimeout(() => {displayAd(ad)}, 1000);
+            return;
+        }
+
         if (ad.object.type === AdType.StandardBanner) {
+            
             safeAreaElement.appendChild(ad.element);
         } else if (ad.object.type === AdType.LBanner) {
             safeAreaElement.appendChild(ad.element);
@@ -324,19 +375,21 @@ function adScene(app, videoId, safeAreaId) {
      */
     function removeAd(ad) {
         if (ad.object.type === AdType.StandardBanner) {
-            setTimeout(() => {safeAreaElement.removeChild(ad.element);}, 450);
-            ad.element.style.animation = "remove-animate .5s linear";
+            setTimeout(() => {safeAreaElement.removeChild(ad.element);}, videoTransition*1000);
+            ad.element.style.animation = `remove-animate ${bannerTransition}s linear forwards`;
         } else if (ad.object.type === AdType.LBanner) {
             restoreVideo();
-            setTimeout(() => {safeAreaElement.removeChild(ad.element)}, 1000);
+            setTimeout(() => {safeAreaElement.removeChild(ad.element)}, videoTransition*1000);
         }
     }
     
     /**
      * public: Perform necessary tasks before creating ads. 
      */
-    function initialize() {
-        videoElement.style.transition = "1s";
+    function initialize(videoTransitionTime=1, bannerTransitionTime=0.5) {
+        videoTransition = videoTransitionTime;
+        videoElement.style.transition = `${videoTransition}s`;
+        bannerTransition = bannerTransitionTime;
         initKeys(COLOR_BUTTON_MASK);
     }
 
@@ -354,109 +407,110 @@ function adScene(app, videoId, safeAreaId) {
  * @returns: true is all attributes are present and valid, else false
  */
 function  validateDA(da_instance) {
-    console.log('key')
+    console.debug("Checking all attributes of JSON Ad...");
     if (!da_instance.hasOwnProperty("key")) return false;
     if (typeof da_instance.key !== "string") return false;
-    console.log('name')
+    console.debug("'key' attr. is valid");
     if (!da_instance.hasOwnProperty("name")) return false;
     if (typeof da_instance.name !== "string") return false;
-    console.log('type')
+    console.debug("'name' attr. is valid");
     if (!da_instance.hasOwnProperty("type")) return false;
-    if (da_instance.type !== AdType.StandardBanner && da_instance.type !== AdType.LBanner) return false;
-    console.log('props')
+    if (!(Object.values(AdType).includes(da_instance.type))) return false;
+    console.debug("'type' attr. is valid");
     if (!da_instance.hasOwnProperty("props")) return false;
     if (typeof da_instance.props !== "object") return false;
-    console.log("the containers' 'props'")
+    console.debug("'props' attr. is valid");
+    // the containers' properties
     let props = da_instance.props
-    console.log('width')
     if (!props.hasOwnProperty("width")) return false;
     if (props.width <= 0 || props.width > 1280) return false;
-    console.log('height')
+    console.debug("'width' attr. is valid");
     if (!props.hasOwnProperty("height")) return false;
-    if (props.height <= 0 || props.width > 720) return false;
-    console.log('top')
+    if (props.height <= 0 || props.height > 720) return false;
+    console.debug("'height' attr. is valid");
     if (!props.hasOwnProperty("top")) return false;
-    if (props.top < 0 || props.width >= 720) return false;
-    console.log('left')
+    if (props.top < 0 || props.top >= 720) return false;
+    console.debug("'top' attr. is valid");
     if (!props.hasOwnProperty("left")) return false;
     if (props.left <= 0 || props.left >= 1280) return false;
-    // check 'backgroundColor'
+    console.debug("'left' attr. is valid");
     if (!props.hasOwnProperty("backgroundColor")) return false;
     if (typeof props.backgroundColor !== "string") {
         return false;
     }  else {
         if (props.backgroundColor.length !== 7 && props.backgroundColor[0] !== "#") return false;
     }
-    console.log('children')
+    console.debug("'backgroundColor' attr. is valid!")
     if (!props.hasOwnProperty("children")) return false;
     if (!Array.isArray(props.children)) return false;
-    console.log("all attributes of 'children'")
+    console.debug("... not checking each child (container)...");
+    // check all attributes of 'children'
     props.children.forEach(container => {
-        console.log('key')
         if (!container.hasOwnProperty("key")) return false;
         if (typeof container.key !== "string") return false;   
-        console.log('type')
-        if (!container.hasOwnProperty("type")) return false;
-        console.log('width')
+        console.debug(`Child key ${container.key} is valid`)
         if (!container.hasOwnProperty("width")) return false;
         if (container.width <= 0 || container.width > 1280) return false;
-        console.log('height')
+        console.debug("'width' child's attr. is valid");
         if (!container.hasOwnProperty("height")) return false;
-        if (container.height <= 0 || container.width > 720) return false;
-        console.log('top')
+        if (container.height <= 0 || container.height > 720) return false;
+        console.debug("'height' child's attr. is valid");
         if (!container.hasOwnProperty("top")) return false;
-        if (container.top < 0 || container.width >= 720) return false;
-        console.log('left')
+        if (container.top < 0 || container.top >= 720) return false;
+        console.debug("'top' child's attr. is valid");
         if (!container.hasOwnProperty("left")) return false;
         if (container.left <= 0 || container.left >= 1280) return false;
-        console.log('the custom attributes')
+        console.debug("'left' child's attr. is valid");
+        if (!container.hasOwnProperty("type")) return false;
+        // check the custom attributes
         if (container.type === ContainerType.Text) {
-            console.log('text')
             if (!container.hasOwnProperty("text")) return false;
             if (typeof container.text !== "string") return false;
-            console.log('fontSize')
+            console.debug("'text' child's attr. is valid");
             if (!container.hasOwnProperty("fontSize")) return false;
             if (typeof container.fontSize !== "string") {
                 return false;
             } else {
                 if (container.fontSize.slice(-2) !== "px") return false;
             } 
-            console.log('textAlign')
+            console.debug("'fontSize' child's attr. is valid");
             if (!container.hasOwnProperty("textAlign")) return false;
             if (!(container.textAlign in textAlignList)) return false; 
-            console.log('color')
+            console.debug("'textAlign' child's attr. is valid");
             if (!container.hasOwnProperty("color")) return false;
             if (typeof container.color !== "string") {
                 return false;
             }  else {
                 if (container.color.length !== 7 && container.color[0] !== "#") return false;
             }
-            console.log('fontWeight')
+            console.debug("'color' child's attr. is valid");
             if (!container.hasOwnProperty("fontWeight")) return false;
             if (!(container.fontWeight in fontWeightList)) return false; 
-            console.log('fontStyle')
+            console.debug("'fontWeight' child's attr. is valid");
             if (!container.hasOwnProperty("fontStyle")) return false;
             if (!(container.fontStyle in fontStyleList)) return false; 
-            console.log('textDecoration')
+            console.debug("'fontStyle' child's attr. is valid");
             if (!container.hasOwnProperty("textDecoration")) return false;
             if (!(container.textDecoration in textDecorationList)) return false; 
-            console.log('fontFamily')
+            console.debug("'textDecoration' child's attr. is valid");
             if (!container.hasOwnProperty("fontFamily")) return false;
             if (typeof container.fontFamily !== "string") return false;   
+            console.debug("'fontFamily' child's attr. is valid");
         } else if (container.type === ContainerType.Image) {
-            console.log('image')
             if (!container.hasOwnProperty("image")) return false;
             if (typeof container.image !== "string") return false;
+            console.debug("'image' child's attr. is valid");
         } else if (container.type === ContainerType.Slideshow) {
-            console.log('nextImageButton')
             if (!container.hasOwnProperty("nextImageButton")) return false;
             if (!(container.nextImageButton in nextImageButtonList)) return false; 
-            console.log('images')
+            console.debug("'nextImageButton' child's attr. is valid");
             if (!props.hasOwnProperty("images")) return false;
             if (!Array.isArray(props.images)) return false;
+            console.debug("'images' child's attr. is valid");
         } else {
             return false;
         }
     })
+    console.debug("...all attributes are valid!");
     return true
 }

@@ -1,0 +1,44 @@
+{
+  "key": "95f29453-53ff-445b-b3ba-a33dafb151eb",
+  "name": "new_std",
+  "type": "standard-banner",
+  "props": {
+    "width": 801,
+    "height": 239,
+    "top": 400,
+    "left": 95.00003051757812,
+    "backgroundColor": "#038002",
+    "children": [
+      {
+        "key": "c57f8751-5a35-4c47-b4ee-6d0a70fb1d24",
+        "type": "text-container",
+        "props": {
+          "width": 204,
+          "height": 57,
+          "top": 489,
+          "left": 410.0000305175781,
+          "textAlign": "center",
+          "fontWeight": "bold",
+          "fontStyle": "normal",
+          "textDecoration": "underline",
+          "fontFamily": "Helvetica, sans-serif",
+          "fontSize": "24px",
+          "color": "#000000",
+          "text": "Drink Beer!"
+        }
+      },
+      {
+        "key": "571f274f-6dc8-4e1e-87c6-507e6a375425",
+        "type": "image-container",
+        "props": {
+          "width": 83,
+          "height": 239,
+          "top": 400,
+          "left": 95.00003051757812,
+          "image": "http://localhost:8000/media/beer_bottle.jpg"
+        }
+      }
+    ]
+  },
+  "isTemplate": false
+}

@@ -1,0 +1,80 @@
+{
+  "key": "89ef2507-f407-4ef9-881b-dd42f67ac083",
+  "name": "burger_ad",
+  "type": "l-banner",
+  "props": {
+    "width": 796,
+    "height": 448,
+    "top": 0,
+    "left": 484.0000305175781,
+    "backgroundColor": "#cae8e8",
+    "children": [
+      {
+        "key": "ac7cf7e3-25fc-4ba4-9d64-002b2371c843",
+        "type": "image-container",
+        "props": {
+          "width": 484,
+          "height": 720,
+          "top": 0,
+          "left": 0,
+          "image": "https://image.adsoftheworld.com/vesqz15dt6j05j2my6i6dpu14uzi"
+        }
+      },
+      {
+        "key": "bc1eceee-36f8-4f58-8d8f-5e0857821b0a",
+        "type": "text-container",
+        "props": {
+          "width": 483,
+          "height": 79,
+          "top": 471,
+          "left": 654.0000305175781,
+          "textAlign": "left",
+          "fontWeight": "bold",
+          "fontStyle": "normal",
+          "textDecoration": "none",
+          "fontFamily": "Gill Sans, sans-serif",
+          "fontSize": "43px",
+          "color": "#004604",
+          "text": "It's not just a Burger!"
+        }
+      },
+      {
+        "key": "6a512dde-6c96-4d0c-8579-a8f76c8e603d",
+        "type": "text-container",
+        "props": {
+          "width": 797,
+          "height": 107,
+          "top": 556,
+          "left": 483,
+          "textAlign": "left",
+          "fontWeight": "bold",
+          "fontStyle": "normal",
+          "textDecoration": "none",
+          "fontFamily": "Gill Sans, sans-serif",
+          "fontSize": "48px",
+          "color": "#cea000",
+          "text": "Its our SUPER-DUPER Burger&nbsp;"
+        }
+      },
+      {
+        "key": "1b6e20d9-f4a8-4ae8-9537-a78be9978cbe",
+        "type": "text-container",
+        "props": {
+          "width": 195,
+          "height": 44,
+          "top": 669,
+          "left": 791.0000305175781,
+          "textAlign": "left",
+          "fontWeight": "normal",
+          "fontStyle": "normal",
+          "textDecoration": "underline",
+          "fontFamily": "Helvetica, sans-serif",
+          "fontSize": "21px",
+          "color": "#8d0000",
+          "text": "Starting at 4.99$"
+        }
+      }
+    ]
+  },
+  "isTemplate": false
+}

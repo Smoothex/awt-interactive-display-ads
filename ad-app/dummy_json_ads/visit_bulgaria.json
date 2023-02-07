@@ -1,0 +1,79 @@
+{
+  "key": "fae927e7-0d74-4296-b8a4-8fbe8c8c30c8",
+  "name": "visit_bulgaria",
+  "type": "standard-banner",
+  "props": {
+    "width": 1011,
+    "height": 228,
+    "top": 442,
+    "left": 120.99996948242188,
+    "backgroundColor": "#ffffff",
+    "children": [
+      {
+        "key": "f2e71a00-b344-4155-bf06-dc4b0dfafc23",
+        "type": "slideshow-container",
+        "props": {
+          "width": 307,
+          "height": 228,
+          "top": 442,
+          "left": 120.99996948242188,
+          "nextImageButton": "green",
+          "images": [
+            "https://www.euronews.com/partnercontent/bulgaria-tourism/find-your-story/img/home-articles-img/home-article-link-img-1-unesco-world@2x.jpg",
+            "https://www.euronews.com/partnercontent/bulgaria-tourism/find-your-story/img/home-articles-img/home-article-link-img-4-bulgarian-mountains@2x.jpg",
+            "https://admin.wanderluxe.travel/application/files/thumbnails/slide/3716/3585/0051/Bulgaria_hero_1500.jpg",
+            "https://www.euronews.com/partnercontent/bulgaria-tourism/find-your-story/img/home-articles-img/home-article-link-img-2-four-seasons@2x.jpg"
+          ]
+        }
+      },
+      {
+        "key": "4e9f4a45-5a56-423d-a4aa-f1e65deacef5",
+        "type": "text-container",
+        "props": {
+          "width": 303,
+          "height": 68,
+          "top": 442,
+          "left": 520.0000305175781,
+          "textAlign": "left",
+          "fontWeight": "bold",
+          "fontStyle": "normal",
+          "textDecoration": "none",
+          "fontFamily": "Trebuchet MS, sans-serif",
+          "fontSize": "44px",
+          "color": "#049469",
+          "text": "Visit Bulgaria!"
+        }
+      },
+      {
+        "key": "a276b32a-e10f-4fde-b289-770c58c3c340",
+        "type": "image-container",
+        "props": {
+          "width": 297,
+          "height": 228,
+          "top": 442,
+          "left": 834.9999694824219,
+          "image": "https://visitmybulgaria.com/wp-content/uploads/2018/12/Logo-Colour.png"
+        }
+      },
+      {
+        "key": "e75bee04-4cfa-4a75-a5ca-675211f531e4",
+        "type": "text-container",
+        "props": {
+          "width": 263,
+          "height": 143,
+          "top": 521,
+          "left": 538.0000305175781,
+          "textAlign": "center",
+          "fontWeight": "bold",
+          "fontStyle": "normal",
+          "textDecoration": "none",
+          "fontFamily": "Trebuchet MS, sans-serif",
+          "fontSize": "30px",
+          "color": "#b4141d",
+          "text": "in Summer<div>in Winter</div><div>or just Anytime!</div>"
+        }
+      }
+    ]
+  },
+  "isTemplate": false
+}

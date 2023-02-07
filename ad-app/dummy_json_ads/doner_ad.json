@@ -1,0 +1,63 @@
+{
+  "key": "44097e4c-9d4f-416a-9441-7db1e5991cbd",
+  "name": "doner_ad",
+  "type": "l-banner",
+  "props": {
+    "width": 640,
+    "height": 360,
+    "top": 0,
+    "left": 640,
+    "backgroundColor": "#ffffff",
+    "children": [
+      {
+        "key": "e86c83f5-2b10-4afb-93d5-7f69e50e601d",
+        "type": "image-container",
+        "props": {
+          "width": 1280,
+          "height": 720,
+          "top": 0,
+          "left": 0,
+          "image": "https://www.foodchamps.org/wp-content/uploads/2022/03/shawarma-vs-gyro-how-do-they-compare.jpg"
+        }
+      },
+      {
+        "key": "aa7d5fdc-5a67-44df-928e-7a8ef6f09018",
+        "type": "text-container",
+        "props": {
+          "width": 168,
+          "height": 135,
+          "top": 555,
+          "left": 23,
+          "textAlign": "left",
+          "fontWeight": "normal",
+          "fontStyle": "normal",
+          "textDecoration": "none",
+          "fontFamily": "Helvetica, sans-serif",
+          "fontSize": "105px",
+          "color": "#ffde7b",
+          "text": "5€"
+        }
+      },
+      {
+        "key": "21073f91-b813-4b2e-b548-2a1df53488ec",
+        "type": "text-container",
+        "props": {
+          "width": 536,
+          "height": 277,
+          "top": 402,
+          "left": 691.0000305175781,
+          "textAlign": "center",
+          "fontWeight": "bold",
+          "fontStyle": "normal",
+          "textDecoration": "none",
+          "fontFamily": "Helvetica, sans-serif",
+          "fontSize": "44px",
+          "color": "#ffffff",
+          "backgroundColor": "#66c641",
+          "text": "<div><br></div>THE BEST SHAWARMA in Berlin!<div>Straße des 17. Juni 135</div>"
+        }
+      }
+    ]
+  },
+  "isTemplate": false
+}

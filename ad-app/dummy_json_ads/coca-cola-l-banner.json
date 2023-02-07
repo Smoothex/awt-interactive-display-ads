@@ -33,7 +33,7 @@
           "textAlign": "center",
           "color": "#000000",
           "fontWeight": "bold",
-          "fontStyle": "italic",
+          "fontStyle": "none",
           "textDecoration": "underline",
           "fontFamily": "Helvetica, sans-serif"
         }

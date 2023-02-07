@@ -2,19 +2,19 @@
 // This file holds the main functionality of the HbbTV app
 //
 const VAST_URL = "http://127.0.0.1:8080/vast";
-const AD_PERIOD = 1000 * 60 * 1; // 0.2 minutes dummy period 
+const AD_PERIOD = 1000 * 20 * 1; // 0.2 minutes dummy period 
 const developmentMode = true;
 
 if (developmentMode) {
-    var dummy_duration = 30000;
+    var dummy_duration = 10000;
     var dummy_counter = 0;
-    var dummy_ads = ['./dummy_json_ads/coca-cola-l-banner.json', './dummy_json_ads/coca-cola-standard-banner.json'];
+    var dummy_ads = ['./dummy_json_ads/doner_ad.json', './dummy_json_ads/visit_bulgaria.json', './dummy_json_ads/burger_ad.json', './dummy_json_ads/coca-cola-standard-banner.json', './dummy_json_ads/coca-cola-l-banner.json', './dummy_json_ads/coca-cola-standard-banner.json'];
 }
 
 var currentAdScene = null;
 
 // function to called on loading the app
-function start() {
+function launchInteractiveAdApplication() {
     // attempt to acquire the Application object
     appManager = document.getElementById('applicationManager');
     appObject = appManager.getOwnerApplication(document);
@@ -26,7 +26,7 @@ function start() {
     }
     // initialize the scene object
     currentAdScene = adScene(appObject, "video", "app_area");
-    currentAdScene.initialize();
+    currentAdScene.initialize(1.0, 0.5);
     // first make request immediately and then set interval
     requestAd();
     setInterval(requestAd, AD_PERIOD);

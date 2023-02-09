@@ -2,7 +2,7 @@
 // This file holds the main functionality of the HbbTV app
 //
 const VAST_URL = "http://127.0.0.1:8080/vast";
-const AD_PERIOD = 1000 * 20 * 1; // 0.2 minutes dummy period 
+const AD_PERIOD = 1000 * 30 * 1; // 30 000ms are 30s 
 const developmentMode = true;
 
 if (developmentMode) {
@@ -60,7 +60,7 @@ function requestAd() {
                 console.log(json)
                 let ad = currentAdScene.createAd(json);
                 currentAdScene.displayAd(ad);
-                setTimeout(() => {currentAdScene.removeAd(ad)}, VASTResponse.duration*1000);
+                setTimeout(() => {currentAdScene.removeAd(ad)}, VASTResponse.duration*500);
             });
         })
         .catch(function (err) {

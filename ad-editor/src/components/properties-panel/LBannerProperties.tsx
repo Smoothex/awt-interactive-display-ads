@@ -65,7 +65,7 @@ export const LBannerProperties = () => {
                   changes: {
                     props: {
                       ...currentAd.props,
-                      backgroundColor: undefined,
+                      backgroundColor: "#ffffff",
                     }
                   }
                 }))

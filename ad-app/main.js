@@ -1,6 +1,11 @@
 //
-// This file holds the main functionality of the HbbTV app
+// This file holds the main functionality of the HbbTV App
+// being developed from Lachezar Nikolov, Momchil Petrov and Todor Moskov
+// as part of the 'Advanced Web Technologies' Project offered by 
+// TU Berlin and FOCUS Institute at Fraunhofer in WiSe22/23.
 //
+
+// This globally defined variable is to be present both in testing and operation
 const VAST_URL = "http://127.0.0.1:8080/vast";
 const AD_PERIOD = 1000 * 20 * 1; // 0.2 minutes dummy period 
 const developmentMode = true;
@@ -13,7 +18,11 @@ if (developmentMode) {
 
 var currentAdScene = null;
 
-// function to called on loading the app
+// function to be called on loading the app
+/**
+ * This function launches the HbbTV Application.
+ * It is meant to be called on loading the HTML body.
+ */
 function launchInteractiveAdApplication() {
     // attempt to acquire the Application object
     appManager = document.getElementById('applicationManager');
@@ -32,6 +41,19 @@ function launchInteractiveAdApplication() {
     setInterval(requestAd, AD_PERIOD);
 }
 
+/**
+ * Request an Ad typically from the globally defined VAST server address.
+ * It uses the 'custom_VAST_client' library for retrieving the XML response.
+ * The VAST response should contain a URL for a single Ad in JSON format that is
+ * fetched directly in here. On receiving the JSON formatted Ad this function 
+ * generates the Ad object and displays it in the App for the defined duration (VAST response).
+ * 
+ * Based on the global variable 'developmentMode' the function can retrieve a
+ * JSON formatted Ad directly from the local machine for testing purposes. 
+ * In this case not VAST request is done and the duration is statically defined.
+ * 
+ * @returns {boolean} true - is the retrieved Ad object is valid; else false
+ */
 function requestAd() {
     if (developmentMode) {
         // create dummy ad by getting one of the two local ads

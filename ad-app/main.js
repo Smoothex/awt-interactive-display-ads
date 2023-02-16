@@ -5,17 +5,18 @@
 // TU Berlin and FOCUS Institute at Fraunhofer in WiSe22/23.
 //
 
-// This globally defined variable is to be present both in testing and operation
+// This globally defined variables are to be present both in testing and operation
 const VAST_URL = "http://127.0.0.1:8080/vast";
 const AD_PERIOD = 1000 * 30 * 1; // 30 000ms are 30s 
 const developmentMode = true;
 
+// defined the following variables globally for 'dev' mode
 if (developmentMode) {
     var dummy_duration = 10000;
     var dummy_counter = 0;
     var dummy_ads = ['./dummy_json_ads/doner_ad.json', './dummy_json_ads/visit_bulgaria.json', './dummy_json_ads/burger_ad.json', './dummy_json_ads/coca-cola-standard-banner.json', './dummy_json_ads/coca-cola-l-banner.json', './dummy_json_ads/coca-cola-standard-banner.json'];
 }
-
+// save the Ad Scene (JS object containing functionality for generating and displaying JSON formatted Ads) globally
 var currentAdScene = null;
 
 // function to be called on loading the app
@@ -66,7 +67,7 @@ function requestAd() {
             let ad = currentAdScene.createAd(json);
             if (ad == null) {
                 console.error(`Ad is not valid and will not be displayed!`)
-                return false;
+                return;
             }
             currentAdScene.displayAd(ad);
             setTimeout(() => {currentAdScene.removeAd( ad)}, dummy_duration);
@@ -81,8 +82,14 @@ function requestAd() {
             .then((json) => {
                 console.log(json)
                 let ad = currentAdScene.createAd(json);
+                if (ad == null) {
+                    console.error(`Ad is not valid and will not be displayed!`)
+                    return;
+                }
                 currentAdScene.displayAd(ad);
-                setTimeout(() => {currentAdScene.removeAd(ad)}, VASTResponse.duration*500);
+                // remove ad after the duration time defined in the VAST response 
+                // timeout in ms = <received duration in seconds> * 1000
+                setTimeout(() => {currentAdScene.removeAd(ad)}, VASTResponse.duration*1000); 
             });
         })
         .catch(function (err) {
@@ -90,6 +97,5 @@ function requestAd() {
             // ToDO: handle an error at requesting an ad
         });
     }
-    return true;
 }
 

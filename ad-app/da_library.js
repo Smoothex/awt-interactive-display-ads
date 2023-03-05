@@ -1,7 +1,8 @@
 // 
-// This file holds the implementation for a custom 
-// library/SDK for handling the custom JSON format
-// for the display ads of the project
+// This file holds the implementation for a custom library/SDK for handling the custom JSON format
+// for displaying ads of the project being developed from Lachezar Nikolov, Momchil Petrov and
+// Todor Moskov as part of the 'Advanced Web Technologies' Project offered by 
+// TU Berlin and FOCUS Institute at Fraunhofer in WiSe22/23.
 //
 
 // masks for activating the button interfaces
@@ -20,17 +21,19 @@ const KEY_MAP = {
     blue: VK_BLUE,
     yellow: VK_YELLOW
 }
-
+// map for the available types of ads
 const AdType = {
     LBanner: "l-banner",
     StandardBanner: "standard-banner"
 }
-
+// map for the available types of containers for an add
 const ContainerType = {
     Image: "image-container",
     Text: "text-container",
     Slideshow: "slideshow-container"
 }
+
+// Lists with allowed properties for the ads' objects
 
 const textAlignList = ["center", "left", "right"];
 const fontWeightList = ["bold", "none"];
@@ -200,6 +203,7 @@ function adScene(app, videoId, safeAreaId) {
      * @returns {HTMLImageElement}
      */
     function createImgContainer(props) {
+        // create a div element for the ad and set its properties
         let element = document.createElement("div");
         element.style.position = "absolute";
         element.style.display = "flex";
@@ -209,6 +213,7 @@ function adScene(app, videoId, safeAreaId) {
         element.style.top = `${props.top}px`;
         let img = document.createElement("img");
         img.style.cssText = "max-width: 100%; max-height: 100%; display: block; margin: auto;";
+        // loading the image inside the created 'div' element
         img.onload = () => {
             restImgToRenderCounter -= 1;
             console.debug("Image is loaded!");
@@ -239,7 +244,6 @@ function adScene(app, videoId, safeAreaId) {
         // loading all images inside the created 'div' element 
         let images = [];
         let imageCounter = 0;
-        let numImgToLoad = props.images.length;
         props.images.forEach(src => {
             let img = document.createElement("img");
             img.style.cssText = "max-width: 100%; max-height: 100%; margin: auto;";
@@ -285,10 +289,12 @@ function adScene(app, videoId, safeAreaId) {
 
     /**
      * private: Create Div Element for the symbol hinting how to switch between pictures on slideshow container.
+     * 
      * @param {string} color 
      * @returns 
      */
     function createSlideshowSymbol(color) {
+        // create a sign 'Press'
         let symbolContainer = document.createElement('div'); 
         {
             symbolContainer.style.position = "absolute";
@@ -302,6 +308,7 @@ function adScene(app, videoId, safeAreaId) {
             symbolContainer.style.fontFamily = "Arial";
             symbolContainer.innerText = "Press";
         }
+        // create a colored square matching the activated colored button
         let symbol = document.createElement('div');
         {
             symbol.style.position = "absolute";
@@ -322,6 +329,7 @@ function adScene(app, videoId, safeAreaId) {
      * @returns {HTMLParagraphElement}
      */
     function createTextContainer(props) {
+         // create a paragraph element for the ad and set its properties
         let element = document.createElement("p");
         element.style.margin = "0px";
         element.style.position = "absolute";
@@ -346,20 +354,20 @@ function adScene(app, videoId, safeAreaId) {
 
     /**
      * public: Append an created HTML element for an ad to the 'safeArea' of the app.
+     * It does that by first checking if the media files are all received yet.
      * 
      * @param {object} ad 
      * @returns {null}
      */
     function displayAd(ad) {
-
+        // if not all media files are loaded than another try for displaying is scheduled in 1 second 
         if (restImgToRenderCounter !== 0) {
             console.debug("Ad not ready yet!")
             setTimeout(() => {displayAd(ad)}, 1000);
             return;
         }
-
+        // after loading media files the ad is immediately (with transition) displayed according its type
         if (ad.object.type === AdType.StandardBanner) {
-            
             safeAreaElement.appendChild(ad.element);
         } else if (ad.object.type === AdType.LBanner) {
             safeAreaElement.appendChild(ad.element);
@@ -370,8 +378,7 @@ function adScene(app, videoId, safeAreaId) {
     /**
      * public: Remove an created HTML element for an ad from the 'safeArea' of the app.
      * 
-     * @param {object} ad 
-     * @returns {null}
+     * @param {object} ad
      */
     function removeAd(ad) {
         if (ad.object.type === AdType.StandardBanner) {
@@ -385,6 +392,11 @@ function adScene(app, videoId, safeAreaId) {
     
     /**
      * public: Perform necessary tasks before creating ads. 
+     * These are setting the transition times for displaying
+     * and removing ads, as well as initializing keys' event listener.
+     * 
+     * @param {number} videoTransitionTime 
+     * @param {number} bannerTransitionTime 
      */
     function initialize(videoTransitionTime=1, bannerTransitionTime=0.5) {
         videoTransition = videoTransitionTime;
@@ -403,6 +415,9 @@ function adScene(app, videoId, safeAreaId) {
 
 /**
  * private: It validates all attributes of the parsed JSON object for a DA.
+ * It does that by checking all required fields and their values if 
+ * corresponding rule exists.
+ * 
  * @param {object} da_instance 
  * @returns: true is all attributes are present and valid, else false
  */

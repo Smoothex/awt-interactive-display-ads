@@ -9,6 +9,7 @@ body
     margin: 0px;
 } 
 
+/** element for the broadcasted video recognized by standard */
 #video {
     position: absolute; 
     left: 0px; 
@@ -34,6 +35,7 @@ div.safe_area
     position: absolute;
 }
 
+/** animation for displaying the standard banners */
 @keyframes append-animate {
 	from {
 		transform: scale(0);
@@ -45,6 +47,7 @@ div.safe_area
 	}
 }
 
+/** animation for removing the standard banners */
 @keyframes remove-animate {
 	from {
 		transform: scale(1);

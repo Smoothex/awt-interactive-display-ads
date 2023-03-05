@@ -70,6 +70,8 @@ function requestAd() {
                 return;
             }
             currentAdScene.displayAd(ad);
+            // remove ad after the duration time defined in the VAST response 
+            // timeout in ms = <received duration in seconds> * 1000
             setTimeout(() => {currentAdScene.removeAd( ad)}, dummy_duration);
         });
     } else {
@@ -83,7 +85,8 @@ function requestAd() {
                 console.log(json)
                 let ad = currentAdScene.createAd(json);
                 if (ad == null) {
-                    console.error(`Ad is not valid and will not be displayed!`)
+                    console.error(`The ad '${json}' is not valid!`).
+                    console.warn(`The ad will not be displayed!`)
                     return;
                 }
                 currentAdScene.displayAd(ad);
@@ -94,7 +97,7 @@ function requestAd() {
         })
         .catch(function (err) {
             console.error('Error occurred at requesting an ad!', err.statusText);
-            // ToDO: handle an error at requesting an ad
+            console.warn('The ad will not be displayed!', err.statusText);
         });
     }
 }
